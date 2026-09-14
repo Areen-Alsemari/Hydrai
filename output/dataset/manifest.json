@@ -1,0 +1,2209 @@
+{
+  "config": {
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M06"
+    ],
+    "boiloff_modes": [
+      "baseline"
+    ],
+    "fault_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      -1
+    ],
+    "base_seed": 20260101,
+    "dt_s": 1.0
+  },
+  "split": {
+    "held_out_modules": [
+      "M06"
+    ],
+    "note": "severity/size is NOT excluded from training -- train sees the full spectrum on every non-held-out module; only the held-out module records go to test, at every severity level.",
+    "train_records": 360202,
+    "test_records": 71979
+  },
+  "episodes": [
+    {
+      "episode_id": "EP-34f79aa5bb",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1760,
+      "seed": 20318654
+    },
+    {
+      "episode_id": "EP-02f243f0d2",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2050,
+      "seed": 20267978
+    },
+    {
+      "episode_id": "EP-d8b7292845",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2047,
+      "seed": 20355022
+    },
+    {
+      "episode_id": "EP-cc06a57bd4",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2074,
+      "seed": 20313747
+    },
+    {
+      "episode_id": "EP-d508a23720",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2064,
+      "seed": 20291546
+    },
+    {
+      "episode_id": "EP-8879efb447",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2066,
+      "seed": 20301321
+    },
+    {
+      "episode_id": "EP-e0b14a30d4",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2053,
+      "seed": 20323418
+    },
+    {
+      "episode_id": "EP-5c9c4a9235",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2060,
+      "seed": 20340617
+    },
+    {
+      "episode_id": "EP-9c845d23e9",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2061,
+      "seed": 20263667
+    },
+    {
+      "episode_id": "EP-8328816dc5",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2052,
+      "seed": 20276687
+    },
+    {
+      "episode_id": "EP-e6ba8d25de",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2081,
+      "seed": 20325488
+    },
+    {
+      "episode_id": "EP-aa5dd00eca",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2066,
+      "seed": 20283197
+    },
+    {
+      "episode_id": "EP-4439c828a7",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2093,
+      "seed": 20338713
+    },
+    {
+      "episode_id": "EP-7101615d2f",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2064,
+      "seed": 20311847
+    },
+    {
+      "episode_id": "EP-2e8e0924b7",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2067,
+      "seed": 20270689
+    },
+    {
+      "episode_id": "EP-79d4ec6db6",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2075,
+      "seed": 20339323
+    },
+    {
+      "episode_id": "EP-a44802a701",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2064,
+      "seed": 20295075
+    },
+    {
+      "episode_id": "EP-b682af9e63",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2056,
+      "seed": 20332754
+    },
+    {
+      "episode_id": "EP-247c56930e",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2080,
+      "seed": 20350155
+    },
+    {
+      "episode_id": "EP-fe6d043ac3",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2090,
+      "seed": 20332322
+    },
+    {
+      "episode_id": "EP-9a4f55a0a9",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2067,
+      "seed": 20302890
+    },
+    {
+      "episode_id": "EP-8c0eb1c65f",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1944,
+      "seed": 20333626
+    },
+    {
+      "episode_id": "EP-cfdff8fe50",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2068,
+      "seed": 20296513
+    },
+    {
+      "episode_id": "EP-a655b2b23f",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2158,
+      "seed": 20305377
+    },
+    {
+      "episode_id": "EP-04130b2d7c",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2026,
+      "seed": 20334884
+    },
+    {
+      "episode_id": "EP-31df12e6d1",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2079,
+      "seed": 20314004
+    },
+    {
+      "episode_id": "EP-b6919aba75",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2057,
+      "seed": 20308213
+    },
+    {
+      "episode_id": "EP-e2eb084aa4",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2052,
+      "seed": 20298502
+    },
+    {
+      "episode_id": "EP-652771d7ec",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2066,
+      "seed": 20315974
+    },
+    {
+      "episode_id": "EP-4e52bf5244",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2051,
+      "seed": 20290920
+    },
+    {
+      "episode_id": "EP-9a5823fd52",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2055,
+      "seed": 20342079
+    },
+    {
+      "episode_id": "EP-fd71128752",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2078,
+      "seed": 20313760
+    },
+    {
+      "episode_id": "EP-e9d5495888",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2073,
+      "seed": 20353749
+    },
+    {
+      "episode_id": "EP-e2a1521fa3",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2079,
+      "seed": 20308861
+    },
+    {
+      "episode_id": "EP-7ab02a1b9b",
+      "module_id": "M01",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2071,
+      "seed": 20342795
+    },
+    {
+      "episode_id": "EP-5d2bef4877",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1768,
+      "seed": 20418654
+    },
+    {
+      "episode_id": "EP-5a5883a01d",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2055,
+      "seed": 20367978
+    },
+    {
+      "episode_id": "EP-bf38e6f1ce",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2073,
+      "seed": 20455022
+    },
+    {
+      "episode_id": "EP-d9d6ad0fdf",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2048,
+      "seed": 20413747
+    },
+    {
+      "episode_id": "EP-6e98557717",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2071,
+      "seed": 20391546
+    },
+    {
+      "episode_id": "EP-0416da60ea",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2079,
+      "seed": 20401321
+    },
+    {
+      "episode_id": "EP-e81a0f4bca",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2056,
+      "seed": 20423418
+    },
+    {
+      "episode_id": "EP-889c3e74c8",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2071,
+      "seed": 20440617
+    },
+    {
+      "episode_id": "EP-4960b07dfb",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2079,
+      "seed": 20363667
+    },
+    {
+      "episode_id": "EP-e37c8c23a0",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2050,
+      "seed": 20376687
+    },
+    {
+      "episode_id": "EP-4750ffa402",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2067,
+      "seed": 20425488
+    },
+    {
+      "episode_id": "EP-23cece8ca1",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2085,
+      "seed": 20383197
+    },
+    {
+      "episode_id": "EP-be0de25f40",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2061,
+      "seed": 20438713
+    },
+    {
+      "episode_id": "EP-2e8d7b5ebc",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2067,
+      "seed": 20411847
+    },
+    {
+      "episode_id": "EP-4b389297d9",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2084,
+      "seed": 20370689
+    },
+    {
+      "episode_id": "EP-4ce2f26996",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2078,
+      "seed": 20439323
+    },
+    {
+      "episode_id": "EP-a35ea5cbfd",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2073,
+      "seed": 20395075
+    },
+    {
+      "episode_id": "EP-f4fab459b5",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2074,
+      "seed": 20432754
+    },
+    {
+      "episode_id": "EP-5c1a38d565",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2087,
+      "seed": 20450155
+    },
+    {
+      "episode_id": "EP-f6debb2440",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2095,
+      "seed": 20432322
+    },
+    {
+      "episode_id": "EP-b598b0e047",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2083,
+      "seed": 20402890
+    },
+    {
+      "episode_id": "EP-51cbc7e4f8",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1939,
+      "seed": 20433626
+    },
+    {
+      "episode_id": "EP-7ad1e7bc15",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2074,
+      "seed": 20396513
+    },
+    {
+      "episode_id": "EP-b88ce915ec",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2179,
+      "seed": 20405377
+    },
+    {
+      "episode_id": "EP-9c99124c17",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2058,
+      "seed": 20434884
+    },
+    {
+      "episode_id": "EP-f833b16b07",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2065,
+      "seed": 20414004
+    },
+    {
+      "episode_id": "EP-95bca98924",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2056,
+      "seed": 20408213
+    },
+    {
+      "episode_id": "EP-32b9fdbe55",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2070,
+      "seed": 20398502
+    },
+    {
+      "episode_id": "EP-cc83c989d0",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2066,
+      "seed": 20415974
+    },
+    {
+      "episode_id": "EP-ae1b0ad6d4",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2062,
+      "seed": 20390920
+    },
+    {
+      "episode_id": "EP-a6dc5027f9",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2045,
+      "seed": 20442079
+    },
+    {
+      "episode_id": "EP-a63847d058",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2074,
+      "seed": 20413760
+    },
+    {
+      "episode_id": "EP-aedb4de1b0",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2072,
+      "seed": 20453749
+    },
+    {
+      "episode_id": "EP-8616e2cdf8",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2062,
+      "seed": 20408861
+    },
+    {
+      "episode_id": "EP-f6f5891e2f",
+      "module_id": "M02",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2072,
+      "seed": 20442795
+    },
+    {
+      "episode_id": "EP-b0f252b2d9",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1744,
+      "seed": 20518654
+    },
+    {
+      "episode_id": "EP-408b53019e",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2057,
+      "seed": 20467978
+    },
+    {
+      "episode_id": "EP-23b70580b9",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2053,
+      "seed": 20555022
+    },
+    {
+      "episode_id": "EP-04a6f4886e",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2076,
+      "seed": 20513747
+    },
+    {
+      "episode_id": "EP-f6f396ca65",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2077,
+      "seed": 20491546
+    },
+    {
+      "episode_id": "EP-cad6ae0c15",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2041,
+      "seed": 20501321
+    },
+    {
+      "episode_id": "EP-bc0dceee5e",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2078,
+      "seed": 20523418
+    },
+    {
+      "episode_id": "EP-3e923ce45f",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2069,
+      "seed": 20540617
+    },
+    {
+      "episode_id": "EP-cf6236d955",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2053,
+      "seed": 20463667
+    },
+    {
+      "episode_id": "EP-a3d913c8f1",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2082,
+      "seed": 20476687
+    },
+    {
+      "episode_id": "EP-75d0bd5242",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2070,
+      "seed": 20525488
+    },
+    {
+      "episode_id": "EP-6a75947fb2",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2070,
+      "seed": 20483197
+    },
+    {
+      "episode_id": "EP-d82d21c7bf",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2071,
+      "seed": 20538713
+    },
+    {
+      "episode_id": "EP-da9799ccb7",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2056,
+      "seed": 20511847
+    },
+    {
+      "episode_id": "EP-296e06cfd5",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2073,
+      "seed": 20470689
+    },
+    {
+      "episode_id": "EP-7b0fe98a29",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2073,
+      "seed": 20539323
+    },
+    {
+      "episode_id": "EP-ff0ebdec29",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2053,
+      "seed": 20495075
+    },
+    {
+      "episode_id": "EP-d025725f5d",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2071,
+      "seed": 20532754
+    },
+    {
+      "episode_id": "EP-7835107580",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2084,
+      "seed": 20550155
+    },
+    {
+      "episode_id": "EP-6d2b9f3d7f",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2086,
+      "seed": 20532322
+    },
+    {
+      "episode_id": "EP-d5723da3c6",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2089,
+      "seed": 20502890
+    },
+    {
+      "episode_id": "EP-7579fc4305",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1952,
+      "seed": 20533626
+    },
+    {
+      "episode_id": "EP-31b0d86d8a",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2072,
+      "seed": 20496513
+    },
+    {
+      "episode_id": "EP-d9fcab1d6e",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2158,
+      "seed": 20505377
+    },
+    {
+      "episode_id": "EP-26b93a61b0",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2071,
+      "seed": 20534884
+    },
+    {
+      "episode_id": "EP-2e6a118d7b",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2067,
+      "seed": 20514004
+    },
+    {
+      "episode_id": "EP-ebef086f75",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2039,
+      "seed": 20508213
+    },
+    {
+      "episode_id": "EP-3285aa268e",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2069,
+      "seed": 20498502
+    },
+    {
+      "episode_id": "EP-335530db06",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2048,
+      "seed": 20515974
+    },
+    {
+      "episode_id": "EP-3d78ba641d",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2065,
+      "seed": 20490920
+    },
+    {
+      "episode_id": "EP-a5e43e09be",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2055,
+      "seed": 20542079
+    },
+    {
+      "episode_id": "EP-5f2c7b5a02",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2081,
+      "seed": 20513760
+    },
+    {
+      "episode_id": "EP-3ce9b70834",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2060,
+      "seed": 20553749
+    },
+    {
+      "episode_id": "EP-1b2ab6cb0c",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2076,
+      "seed": 20508861
+    },
+    {
+      "episode_id": "EP-656360664d",
+      "module_id": "M03",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2073,
+      "seed": 20542795
+    },
+    {
+      "episode_id": "EP-e8d9aded92",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1749,
+      "seed": 20618654
+    },
+    {
+      "episode_id": "EP-72cf322b88",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2066,
+      "seed": 20567978
+    },
+    {
+      "episode_id": "EP-d6db3b3f3d",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2066,
+      "seed": 20655022
+    },
+    {
+      "episode_id": "EP-bf919fa49c",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2067,
+      "seed": 20613747
+    },
+    {
+      "episode_id": "EP-bf7d208ff2",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2064,
+      "seed": 20591546
+    },
+    {
+      "episode_id": "EP-c8293a2076",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2058,
+      "seed": 20601321
+    },
+    {
+      "episode_id": "EP-d7bcd00990",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2053,
+      "seed": 20623418
+    },
+    {
+      "episode_id": "EP-b7366ec259",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2082,
+      "seed": 20640617
+    },
+    {
+      "episode_id": "EP-d63322dce3",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2084,
+      "seed": 20563667
+    },
+    {
+      "episode_id": "EP-3d657f9bb8",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2074,
+      "seed": 20576687
+    },
+    {
+      "episode_id": "EP-dec79ebdf8",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2070,
+      "seed": 20625488
+    },
+    {
+      "episode_id": "EP-67169db8c9",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2079,
+      "seed": 20583197
+    },
+    {
+      "episode_id": "EP-dac95e87a7",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2053,
+      "seed": 20638713
+    },
+    {
+      "episode_id": "EP-313dc04578",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2071,
+      "seed": 20611847
+    },
+    {
+      "episode_id": "EP-5058ed69ce",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2077,
+      "seed": 20570689
+    },
+    {
+      "episode_id": "EP-809b882024",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2080,
+      "seed": 20639323
+    },
+    {
+      "episode_id": "EP-e465ce2284",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2068,
+      "seed": 20595075
+    },
+    {
+      "episode_id": "EP-fdf9dc1f9c",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2074,
+      "seed": 20632754
+    },
+    {
+      "episode_id": "EP-8cf54abf15",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2068,
+      "seed": 20650155
+    },
+    {
+      "episode_id": "EP-3455d1c9a4",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2059,
+      "seed": 20632322
+    },
+    {
+      "episode_id": "EP-579c41af7e",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2078,
+      "seed": 20602890
+    },
+    {
+      "episode_id": "EP-ad2818c79c",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1963,
+      "seed": 20633626
+    },
+    {
+      "episode_id": "EP-acfdd388a6",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2064,
+      "seed": 20596513
+    },
+    {
+      "episode_id": "EP-34ead41a79",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2149,
+      "seed": 20605377
+    },
+    {
+      "episode_id": "EP-8b1ebe5bb9",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2042,
+      "seed": 20634884
+    },
+    {
+      "episode_id": "EP-ce85fd308a",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2084,
+      "seed": 20614004
+    },
+    {
+      "episode_id": "EP-e9ccc07c07",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2065,
+      "seed": 20608213
+    },
+    {
+      "episode_id": "EP-c2d712d34d",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2068,
+      "seed": 20598502
+    },
+    {
+      "episode_id": "EP-76dce42084",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2067,
+      "seed": 20615974
+    },
+    {
+      "episode_id": "EP-f69849e6c9",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2065,
+      "seed": 20590920
+    },
+    {
+      "episode_id": "EP-3143e809ac",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2055,
+      "seed": 20642079
+    },
+    {
+      "episode_id": "EP-851440a4fc",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2084,
+      "seed": 20613760
+    },
+    {
+      "episode_id": "EP-b5633c22f0",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2082,
+      "seed": 20653749
+    },
+    {
+      "episode_id": "EP-62f10032d8",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2068,
+      "seed": 20608861
+    },
+    {
+      "episode_id": "EP-5961334afc",
+      "module_id": "M04",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2076,
+      "seed": 20642795
+    },
+    {
+      "episode_id": "EP-56bb34c982",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1762,
+      "seed": 20718654
+    },
+    {
+      "episode_id": "EP-78d4cd7650",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2048,
+      "seed": 20667978
+    },
+    {
+      "episode_id": "EP-5c1f548efe",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2055,
+      "seed": 20755022
+    },
+    {
+      "episode_id": "EP-8a5f600185",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2054,
+      "seed": 20713747
+    },
+    {
+      "episode_id": "EP-2b894b82fd",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2058,
+      "seed": 20691546
+    },
+    {
+      "episode_id": "EP-7a2fc8e576",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2054,
+      "seed": 20701321
+    },
+    {
+      "episode_id": "EP-76d5ed5dea",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2081,
+      "seed": 20723418
+    },
+    {
+      "episode_id": "EP-ead1274ad5",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2075,
+      "seed": 20740617
+    },
+    {
+      "episode_id": "EP-a27c7a6dda",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2077,
+      "seed": 20663667
+    },
+    {
+      "episode_id": "EP-d177d6556a",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2080,
+      "seed": 20676687
+    },
+    {
+      "episode_id": "EP-94b34f85a9",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2086,
+      "seed": 20725488
+    },
+    {
+      "episode_id": "EP-e87a6509cb",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2052,
+      "seed": 20683197
+    },
+    {
+      "episode_id": "EP-15bd42964d",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2085,
+      "seed": 20738713
+    },
+    {
+      "episode_id": "EP-02c22a0e0f",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2062,
+      "seed": 20711847
+    },
+    {
+      "episode_id": "EP-1d24f9495d",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2083,
+      "seed": 20670689
+    },
+    {
+      "episode_id": "EP-ac7bf9a6f5",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2089,
+      "seed": 20739323
+    },
+    {
+      "episode_id": "EP-6a32de4f41",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2077,
+      "seed": 20695075
+    },
+    {
+      "episode_id": "EP-56577c4ad5",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2062,
+      "seed": 20732754
+    },
+    {
+      "episode_id": "EP-d6ca573186",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2073,
+      "seed": 20750155
+    },
+    {
+      "episode_id": "EP-0874a88f4b",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2072,
+      "seed": 20732322
+    },
+    {
+      "episode_id": "EP-cde3c78054",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2087,
+      "seed": 20702890
+    },
+    {
+      "episode_id": "EP-15282f2f2b",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1951,
+      "seed": 20733626
+    },
+    {
+      "episode_id": "EP-c64010f72a",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2066,
+      "seed": 20696513
+    },
+    {
+      "episode_id": "EP-364aba896f",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2164,
+      "seed": 20705377
+    },
+    {
+      "episode_id": "EP-ec9fdea10a",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2072,
+      "seed": 20734884
+    },
+    {
+      "episode_id": "EP-2b6b802d21",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2071,
+      "seed": 20714004
+    },
+    {
+      "episode_id": "EP-96b201ad74",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2045,
+      "seed": 20708213
+    },
+    {
+      "episode_id": "EP-97c6842bb0",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2059,
+      "seed": 20698502
+    },
+    {
+      "episode_id": "EP-d477621881",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2075,
+      "seed": 20715974
+    },
+    {
+      "episode_id": "EP-812727310e",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2061,
+      "seed": 20690920
+    },
+    {
+      "episode_id": "EP-f6f3fe8554",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2065,
+      "seed": 20742079
+    },
+    {
+      "episode_id": "EP-dc4c44c2a1",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2069,
+      "seed": 20713760
+    },
+    {
+      "episode_id": "EP-90d73a0a13",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2086,
+      "seed": 20753749
+    },
+    {
+      "episode_id": "EP-b2763dd63f",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2046,
+      "seed": 20708861
+    },
+    {
+      "episode_id": "EP-16386bee0e",
+      "module_id": "M05",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2071,
+      "seed": 20742795
+    },
+    {
+      "episode_id": "EP-d3c65145fa",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 0,
+      "fault_name": "normal",
+      "variant_tag": "default",
+      "n_records": 1756,
+      "seed": 20818654
+    },
+    {
+      "episode_id": "EP-faf7850e86",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.15",
+      "n_records": 2051,
+      "seed": 20767978
+    },
+    {
+      "episode_id": "EP-8ce0596e39",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.30",
+      "n_records": 2067,
+      "seed": 20855022
+    },
+    {
+      "episode_id": "EP-f920f862b4",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.45",
+      "n_records": 2061,
+      "seed": 20813747
+    },
+    {
+      "episode_id": "EP-50d44bf36d",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.60",
+      "n_records": 2052,
+      "seed": 20791546
+    },
+    {
+      "episode_id": "EP-f65289ba7d",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 1,
+      "fault_name": "sensor_fault",
+      "variant_tag": "onset_0.75",
+      "n_records": 2045,
+      "seed": 20801321
+    },
+    {
+      "episode_id": "EP-ff9011e3bb",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2060,
+      "seed": 20823418
+    },
+    {
+      "episode_id": "EP-ecc6df1c6a",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2068,
+      "seed": 20840617
+    },
+    {
+      "episode_id": "EP-33d7a95048",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2089,
+      "seed": 20763667
+    },
+    {
+      "episode_id": "EP-006ac1266b",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2072,
+      "seed": 20776687
+    },
+    {
+      "episode_id": "EP-5aee8e714e",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2062,
+      "seed": 20825488
+    },
+    {
+      "episode_id": "EP-7b4e34715c",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 2,
+      "fault_name": "insulation_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2083,
+      "seed": 20783197
+    },
+    {
+      "episode_id": "EP-e58a931fb7",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_fast",
+      "n_records": 2070,
+      "seed": 20838713
+    },
+    {
+      "episode_id": "EP-05614903f1",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_medium",
+      "n_records": 2078,
+      "seed": 20811847
+    },
+    {
+      "episode_id": "EP-6aee0f4b1c",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "degraded_slow",
+      "n_records": 2059,
+      "seed": 20770689
+    },
+    {
+      "episode_id": "EP-eae70058aa",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_fast",
+      "n_records": 2058,
+      "seed": 20839323
+    },
+    {
+      "episode_id": "EP-a92ceca721",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_medium",
+      "n_records": 2072,
+      "seed": 20795075
+    },
+    {
+      "episode_id": "EP-000601f6fb",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 3,
+      "fault_name": "vacuum_degradation",
+      "variant_tag": "severe_slow",
+      "n_records": 2071,
+      "seed": 20832754
+    },
+    {
+      "episode_id": "EP-1c55e83672",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "mild",
+      "n_records": 2079,
+      "seed": 20850155
+    },
+    {
+      "episode_id": "EP-f3205ec149",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "moderate",
+      "n_records": 2087,
+      "seed": 20832322
+    },
+    {
+      "episode_id": "EP-e4b241a1ef",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 4,
+      "fault_name": "abnormal_pressure_rise",
+      "variant_tag": "severe",
+      "n_records": 2072,
+      "seed": 20802890
+    },
+    {
+      "episode_id": "EP-8a8ce59cf2",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "pinhole",
+      "n_records": 1950,
+      "seed": 20833626
+    },
+    {
+      "episode_id": "EP-07aba9f79b",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small",
+      "n_records": 2066,
+      "seed": 20796513
+    },
+    {
+      "episode_id": "EP-7ae94003b8",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "small_medium",
+      "n_records": 2144,
+      "seed": 20805377
+    },
+    {
+      "episode_id": "EP-e2a79d8cbd",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "medium_large",
+      "n_records": 2050,
+      "seed": 20834884
+    },
+    {
+      "episode_id": "EP-c16ad75644",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 5,
+      "fault_name": "containment_anomaly",
+      "variant_tag": "full_bore",
+      "n_records": 2073,
+      "seed": 20814004
+    },
+    {
+      "episode_id": "EP-7d3f3ba418",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "mild",
+      "n_records": 2047,
+      "seed": 20808213
+    },
+    {
+      "episode_id": "EP-ae0b47db16",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "moderate",
+      "n_records": 2061,
+      "seed": 20798502
+    },
+    {
+      "episode_id": "EP-13a90a6bf7",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": 6,
+      "fault_name": "structural_concern",
+      "variant_tag": "severe",
+      "n_records": 2042,
+      "seed": 20815974
+    },
+    {
+      "episode_id": "EP-adb869e8d0",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_5",
+      "n_records": 2063,
+      "seed": 20790920
+    },
+    {
+      "episode_id": "EP-06e8fcef6b",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_6",
+      "n_records": 2061,
+      "seed": 20842079
+    },
+    {
+      "episode_id": "EP-4e8934b73f",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_4_5",
+      "n_records": 2101,
+      "seed": 20813760
+    },
+    {
+      "episode_id": "EP-a66284a696",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_2_4",
+      "n_records": 2084,
+      "seed": 20853749
+    },
+    {
+      "episode_id": "EP-4faf339f52",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_3_5",
+      "n_records": 2060,
+      "seed": 20808861
+    },
+    {
+      "episode_id": "EP-b3c5fb0cd4",
+      "module_id": "M06",
+      "boiloff_mode": "baseline",
+      "fault_id": -1,
+      "fault_name": "unknown_anomaly",
+      "variant_tag": "unknown_6_2",
+      "n_records": 2065,
+      "seed": 20842795
+    }
+  ],
+  "total_records": 432181,
+  "label_counts": {
+    "normal": 189907,
+    "sensor_fault": 33822,
+    "insulation_degradation": 42567,
+    "vacuum_degradation": 42579,
+    "abnormal_pressure_rise": 23080,
+    "containment_anomaly": 34995,
+    "structural_concern": 22708,
+    "unknown_anomaly": 42523
+  },
+  "variant_counts": {
+    "normal:default": 10539,
+    "normal:onset_0.15": 3967,
+    "sensor_fault:onset_0.15": 8360,
+    "normal:onset_0.30": 4783,
+    "sensor_fault:onset_0.30": 7578,
+    "normal:onset_0.45": 5601,
+    "sensor_fault:onset_0.45": 6779,
+    "normal:onset_0.60": 6414,
+    "sensor_fault:onset_0.60": 5972,
+    "normal:onset_0.75": 7210,
+    "sensor_fault:onset_0.75": 5133,
+    "normal:degraded_fast": 7949,
+    "insulation_degradation:degraded_fast": 8416,
+    "normal:degraded_medium": 9561,
+    "insulation_degradation:degraded_medium": 7638,
+    "normal:degraded_slow": 11206,
+    "insulation_degradation:degraded_slow": 6839,
+    "normal:severe_fast": 12815,
+    "insulation_degradation:severe_fast": 6011,
+    "normal:severe_medium": 14437,
+    "insulation_degradation:severe_medium": 5210,
+    "normal:severe_slow": 7958,
+    "insulation_degradation:severe_slow": 8453,
+    "vacuum_degradation:degraded_fast": 8449,
+    "vacuum_degradation:degraded_medium": 7624,
+    "vacuum_degradation:degraded_slow": 6841,
+    "vacuum_degradation:severe_fast": 6037,
+    "vacuum_degradation:severe_medium": 5196,
+    "vacuum_degradation:severe_slow": 8432,
+    "normal:mild": 7950,
+    "abnormal_pressure_rise:mild": 8485,
+    "normal:moderate": 9575,
+    "abnormal_pressure_rise:moderate": 7697,
+    "normal:severe": 11175,
+    "abnormal_pressure_rise:severe": 6898,
+    "normal:pinhole": 4029,
+    "containment_anomaly:pinhole": 7670,
+    "normal:small": 5067,
+    "containment_anomaly:small": 7343,
+    "normal:small_medium": 6068,
+    "containment_anomaly:small_medium": 6884,
+    "normal:medium_large": 6674,
+    "containment_anomaly:medium_large": 5645,
+    "normal:full_bore": 4986,
+    "containment_anomaly:full_bore": 7453,
+    "structural_concern:mild": 8345,
+    "structural_concern:moderate": 7596,
+    "structural_concern:severe": 6767,
+    "normal:unknown_2_5": 3973,
+    "unknown_anomaly:unknown_2_5": 8394,
+    "normal:unknown_3_6": 4762,
+    "unknown_anomaly:unknown_3_6": 7574,
+    "normal:unknown_4_5": 5610,
+    "unknown_anomaly:unknown_4_5": 6877,
+    "normal:unknown_2_4": 6403,
+    "unknown_anomaly:unknown_2_4": 6054,
+    "normal:unknown_3_5": 7210,
+    "unknown_anomaly:unknown_3_5": 5181,
+    "normal:unknown_6_2": 3985,
+    "unknown_anomaly:unknown_6_2": 8443
+  }
+}

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# Generated dataset output (JSONL data files, and the earlier one-off
+# per-scenario exploratory JSON dumps from before the consolidated dataset
+# driver existed): large and fully reproducible from a fixed seed -- see
+# README.md for the regen command. Keep only the small manifest*.json files,
+# useful for reviewing what a run produced without regenerating it.
+output/*.json
+output/dataset/*.jsonl

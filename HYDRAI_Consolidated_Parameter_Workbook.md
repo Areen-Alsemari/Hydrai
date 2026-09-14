@@ -137,6 +137,16 @@ Worth a quick sanity-check against engineering before locking this in, since thi
 
 Both checks agree: the corrected formula is the one to use.
 
+⚠️ **A second, independent transcription error found in the same source (during digital-twin implementation, 2026-09):** the `cp(T)` coefficients above (the `c` through `i` terms) are also mis-transcribed. Evaluated as given, `cp(T)` *decreases* toward ~0 J/(kg·K) as T rises toward 293 K — physically backwards (304 stainless's specific heat should rise toward ~470 J/(kg·K) near room temperature) — and the error isn't confined to the high-T extrapolation: it also produces physically meaningless values (~10⁻²⁰ J/(kg·K), not just "off") at 20–21 K, i.e. inside the actual LH₂ operating range this workbook is meant to cover. Re-fetching trc.nist.gov/cryogenics/materials' 304 Stainless Steel page directly gives different coefficients from the `c` term onward (confirmed independently by two separate checks against the live NIST page). Corrected coefficients:
+
+```
+log10(cp) = 22.0061 - 127.5528*log10(T) + 303.647*log10(T)^2 - 381.0098*log10(T)^3
+            + 274.0328*log10(T)^4 - 112.9212*log10(T)^5 + 24.7593*log10(T)^6
+            - 2.239153*log10(T)^7 + 0*log10(T)^8
+cp = 10^(log10(cp))
+```
+(`a`, `b` match the earlier doc exactly — only `c` through `h` drift, and `i` is dropped to 0.) This corrected form gives cp(20 K) ≈ 13.5 J/(kg·K) and cp(293 K) ≈ 470.5 J/(kg·K), both physically sane. **Recommend replacing the `c`–`i` coefficients above with these before this formula is used for anything** — it was silently producing near-zero specific heat across the entire operating envelope. Same recommendation as the dL/L fix: confirm with engineering before locking in, since anything using cp(T) (thermal transient/lumped-capacitance calculations) inherits this.
+
 ### 4.3 Young's Modulus E(T) — filling the gap
 
 Not published on NIST's 304L page (appears to be a gap in NIST's own site, since it's listed as "available" but no table is shown). Substituting NIST's standard 304 (UNS S30400) fit, valid across the full 5–293 K range as two pieces:
@@ -362,7 +372,7 @@ For a hackathon submission with real incubation stakes, it matters which of thes
 | Sensor specs | **Plausible, domain-consistent** | Matches general cryogenic-instrumentation norms; not matched to a specific datasheet |
 | Fault taxonomy causal logic | **Internally consistent** | Verified via mass/energy balance tracing, not literature |
 | k(T) formula, units (K), range (1–300K) | **Verified against primary source** | Matches NIST cryogenics database exactly |
-| cp(T) formula | **Verified, with a flagged substitution** | Matches NIST's 304 (not 304L) fit exactly; range 4–300K |
+| cp(T) formula | **⚠️ Corrected — original coefficients were transcribed wrong** | `c`–`i` coefficients replaced with NIST's actual 304 fit (re-fetched directly); original gave physically meaningless (~0) values across the whole operating range, including at 20–21 K. Substitution note (304 not 304L) still applies; range 4–300K |
 | Thermal expansion dL/L(T) | **Corrected and independently validated** | Two independent checks (self-consistency at 293K + Fermilab literature match at 77K), both pass |
 | Young's modulus E(T) | **Filled gap, flagged substitution** | NIST's 304 fit, used because 304L's own isn't published |
 | Yield/tensile strength (682–1059 / 1943–2433 MPa) | **Verified against independent literature** | MDPI 2023 paper's own 20K test matches upper bound almost exactly |
