@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="__LANG__" dir="__DIR__">
+<head>
+<meta charset="utf-8">
+<title>HYDRAI add-on panel (read-only)</title>
+<style>
+:root{
+  --bg:#f3f4f5; --panel:#ffffff; --rule:#c8cdd2; --rule2:#e3e6e9; --head:#eceef0; --text:#1c2227; --mut:#5a636b;
+  --plant:#2f3a45;            /* plant (existing dashboard) series */
+  --hy:#0d6b6e;               /* HYDRAI */
+  --alert:#b3261e;            /* alert / static alarm */
+  --warn:#a86a00;             /* warning / modelled operator */
+  --sans:"IBM Plex Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --ar:"IBM Plex Sans Arabic","Noto Sans Arabic","SF Arabic","Geeza Pro",sans-serif;
+  --mono:"IBM Plex Mono","Menlo","SF Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
+body{width:1920px;height:1080px;overflow:hidden;font:22px/1.35 var(--sans);font-feature-settings:"tnum" 1,"lnum" 1}
+html[lang=ar] body{font-family:var(--ar)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+html[lang=ar] #t_sub,html[lang=ar] #t_clock,html[lang=ar] .ph .tag,html[lang=ar] #f_src{font-family:var(--ar)}
+#top{height:56px;background:#fff;border-bottom:1px solid var(--rule);display:flex;align-items:center;padding:0 20px;gap:28px}
+#top .plant{font-weight:600;font-size:24px}
+#top .sub{color:var(--mut);font-size:20px}
+#top .sp{flex:1}
+#top .clock{font-size:22px}
+#app{position:absolute;top:56px;left:0;width:1920px;height:984px;padding:16px}
+#foot{position:absolute;bottom:0;left:0;width:1920px;height:40px;border-top:1px solid var(--rule);background:#fff;display:flex;align-items:center;padding:0 20px;font-size:19px;color:var(--mut);gap:24px}
+#foot .sp{flex:1}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:3px;position:absolute;overflow:hidden}
+.ph{height:40px;background:var(--head);border-bottom:1px solid var(--rule);display:flex;align-items:center;padding:0 14px;font-weight:600;font-size:21px;gap:14px}
+.ph .sp{flex:1}.ph .tag{font-weight:400;color:var(--mut);font-size:19px}
+.ph.hy{background:#e4f0f0;color:#09484a}.ph.hy .tag{color:#09484a}
+.pb{padding:10px 14px}
+table{border-collapse:collapse;width:100%}
+th{font-weight:600;text-align:start;color:var(--mut);font-size:19px;border-bottom:1px solid var(--rule);padding:6px 8px}
+td{padding:9px 8px;border-bottom:1px solid var(--rule2);vertical-align:top}
+td.n,th.n{text-align:end}
+html[lang=ar] td.n,html[lang=ar] th.n{text-align:start}
+.roomy td{padding:14px 8px}.dense td{padding:4px 8px}.dense th{padding:4px 8px}
+.mut{color:var(--mut)}.hy{color:var(--hy)}.al{color:var(--alert)}.wa{color:var(--warn)}
+.b{font-weight:600}
+.btn{display:inline-block;border:1px solid var(--rule);border-radius:3px;padding:8px 22px;font-size:22px;background:#fff;margin-inline-end:12px}
+.btn.ok{border-color:var(--hy);color:var(--hy);font-weight:600}
+.btn.no{color:var(--text)}
+svg{display:block;direction:ltr;margin-top:10px}
+svg.s0{margin-top:0}
+svg text{font-family:var(--sans);fill:var(--text);font-size:19px}
+html[lang=ar] svg text{font-family:var(--ar)}
+svg text.m{font-family:var(--mono)}
+svg .grid{stroke:#e3e6e9;stroke-width:1}
+svg .axis{stroke:#9aa2a9;stroke-width:1}
+svg .tick{fill:var(--mut)}
+.lbl{position:absolute;font-size:19px;color:var(--mut)}
+.tier-band{padding:10px 18px;font-weight:600;font-size:26px;display:flex;gap:18px;align-items:baseline}
+.tier-critical{background:var(--alert);color:#fff}.tier-alert{background:#d9534a;color:#fff}.tier-watch{background:#e9b13c;color:#1c2227}.tier-none{background:var(--head);color:var(--text)}
+.kv td:first-child{width:300px;color:var(--mut);font-size:20px}
+.step{position:absolute;height:104px;border:1px solid var(--rule);background:#fff;padding:8px 12px;font-weight:600}
+.step.on{border-color:var(--hy);background:#e4f0f0;color:#09484a}
+.step .t{font-weight:400;font-size:19px;color:var(--mut);display:block;margin-top:2px}
+.step.on .t{color:#09484a}
+</style>
+</head>
+<body>
+<div id="top"><span class="plant" id="t_plant"></span><span class="sub mono" id="t_sub"></span><span class="sp"></span><span class="clock mono" id="t_clock"></span></div>
+<div id="app"></div>
+<div id="foot"><span id="f_disc"></span><span class="sp"></span><span class="mono" id="f_src"></span></div>
+<script>
+const DATA=/*DATA*/;
+const I18N=/*I18N*/;
+const AR=document.documentElement.lang==='ar';
+const t=k=>{const v=I18N[k];if(!v)throw new Error('missing i18n '+k);return AR?v[1]:v[0]};
+const f=(x,d=1)=>Number(x).toFixed(d);
+const SCREEN=(new URLSearchParams(location.search).get('screen')||'1');
+const C={plant:'#2f3a45',hy:'#0d6b6e',alert:'#b3261e',warn:'#a86a00',grid:'#e3e6e9',mut:'#5a636b'};
+const E=DATA.ep, K=DATA.class;
+
+/* ---------- chart helpers (SVG, drawn from the replay arrays) ---------- */
+function sel(rows,keys,x0,x1){const o={};keys.forEach(k=>o[k]=[]);rows.t.forEach((tt,i)=>{if(tt>=x0&&tt<=x1)keys.forEach(k=>o[k].push(k==='t'?tt:rows[k][i]))});return o}
+function path(xs,ys,X,Y,step){let d='',pen=false,py=null;for(let i=0;i<xs.length;i++){const y=ys[i];if(y==null){pen=false;continue}
+  if(!pen){d+=`M${X(xs[i]).toFixed(1)},${Y(y).toFixed(1)}`;pen=true}else if(step){d+=`H${X(xs[i]).toFixed(1)}V${Y(y).toFixed(1)}`}else d+=`L${X(xs[i]).toFixed(1)},${Y(y).toFixed(1)}`}return d}
+function ticks(a,b,n){const s=(b-a)/n;const o=[];for(let i=0;i<=n;i++)o.push(a+s*i);return o}
+function chart(o){
+  const w=o.w,h=o.h,ml=o.ml??150,mr=o.mr??18,mt=o.mt??8,mb=o.axis?44:6;
+  const X=v=>ml+(v-o.x0)/(o.x1-o.x0)*(w-ml-mr),Y=v=>mt+(1-(v-o.y0)/(o.y1-o.y0))*(h-mt-mb);
+  let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  (o.yticks||ticks(o.y0,o.y1,4)).forEach(v=>{s+=`<line class="grid" x1="${ml}" x2="${w-mr}" y1="${Y(v)}" y2="${Y(v)}"/><text class="tick m" x="${ml-8}" y="${Y(v)+6}" text-anchor="end">${f(v,o.yd??0)}</text>`});
+  (o.xticks||ticks(o.x0,o.x1,6)).forEach(v=>{s+=`<line class="grid" x1="${X(v)}" x2="${X(v)}" y1="${mt}" y2="${h-mb}"/>`;if(o.axis)s+=`<text class="tick m" x="${X(v)}" y="${h-mb+26}" text-anchor="middle">${f(v,o.xd??0)}</text>`});
+  s+=`<line class="axis" x1="${ml}" x2="${w-mr}" y1="${h-mb}" y2="${h-mb}"/><line class="axis" x1="${ml}" x2="${ml}" y1="${mt}" y2="${h-mb}"/>`;
+  (o.bands||[]).forEach(b=>{let seg=[];const flush=()=>{if(seg.length>1){const dd=seg.map((p,i)=>`${i?'L':'M'}${X(p[0]).toFixed(1)},${Y(p[2]).toFixed(1)}`).join('')+seg.slice().reverse().map(p=>`L${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join('')+'Z';s+=`<path d="${dd}" fill="${b.color}" fill-opacity=".16" stroke="none"/>`}seg=[]};
+    b.x.forEach((xx,i)=>{if(b.lo[i]!=null&&b.hi[i]!=null)seg.push([xx,b.lo[i],b.hi[i]]);else flush()});flush()});
+  (o.hlines||[]).forEach(l=>{s+=`<line x1="${ml}" x2="${w-mr}" y1="${Y(l.y)}" y2="${Y(l.y)}" stroke="${l.color||C.mut}" stroke-width="1.2" stroke-dasharray="${l.dash||'6 5'}"/><text x="${l.left?ml+8:w-mr-8}" y="${Y(l.y)-7}" text-anchor="${l.left?'start':'end'}" fill="${l.color||C.mut}" style="fill:${l.color||C.mut}">${l.text}</text>`});
+  (o.series||[]).forEach(se=>{s+=`<path d="${path(se.x,se.y,X,Y,se.step)}" fill="none" stroke="${se.color}" stroke-width="${se.width||1.5}" ${se.dash?`stroke-dasharray="${se.dash}"`:''} stroke-linejoin="round"/>`});
+  (o.vlines||[]).forEach(l=>{s+=`<line x1="${X(l.x)}" x2="${X(l.x)}" y1="${mt}" y2="${h-mb}" stroke="${l.color}" stroke-width="${l.width||1.5}" ${l.dash?`stroke-dasharray="${l.dash}"`:''}/>`});
+  (o.texts||[]).forEach(a=>{s+=`<text x="${a.x==null?a.px:X(a.x)}" y="${a.y==null?a.py:Y(a.y)}" text-anchor="${a.anchor||'start'}" style="fill:${a.color||C.text};font-weight:${a.bold?600:400}">${a.text}</text>`});
+  (o.leaders||[]).forEach(a=>{s+=`<line x1="${X(a.x)}" y1="${Y(a.y)}" x2="${a.px}" y2="${a.py}" stroke="${a.color}" stroke-width="1"/>`});
+  if(o.ylabel)s+=`<text x="${ml}" y="${mt+4}" dy="0" style="fill:${C.mut}" text-anchor="start" transform="translate(${ml+10},${mt+16})" class="ylab"></text>`;
+  s+='</svg>';return {svg:s,X,Y,ml,mt,mb,w,h}}
+function strip(o){const w=o.w,h=o.h,ml=o.ml??150,mr=o.mr??18;const X=v=>ml+(v-o.x0)/(o.x1-o.x0)*(w-ml-mr);
+  let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect x="${ml}" y="4" width="${w-ml-mr}" height="${h-8}" fill="#f6f7f8" stroke="${'#d6dade'}"/>`;
+  let i=0;const n=o.t.length;while(i<n){if(o.v[i]===1){let j=i;while(j+1<n&&o.v[j+1]===1)j++;const xa=X(Math.max(o.t[i],o.x0)),xb=X(Math.min(o.t[Math.min(j+1,n-1)],o.x1));s+=`<rect x="${xa}" y="4" width="${Math.max(xb-xa,1.5)}" height="${h-8}" fill="${o.color}"/>`;i=j+1}else i++}
+  (o.vlines||[]).forEach(l=>{s+=`<line x1="${X(l.x)}" x2="${X(l.x)}" y1="0" y2="${h}" stroke="${l.color}" stroke-width="${l.width||1.5}" ${l.dash?`stroke-dasharray="${l.dash}"`:''}/>`});
+  s+=`<text x="${ml-8}" y="${h/2+6}" text-anchor="end" style="fill:${C.mut}">${o.label}</text></svg>`;return s}
+function xlab(txt,w,ml=96){return `<div class="lbl" style="position:static;text-align:${AR?'left':'right'};padding-${AR?'left':'right'}:18px;margin-top:-4px">${txt}</div>`}
+function ylab(txt){return `<div class="lbl" style="position:static;margin:2px 0 -4px 0"><span class="mono">${txt}</span></div>`}
+const win=(rows,x0,x1,keys)=>sel(rows,['t',...keys],x0,x1);
+
+/* ---------- common parts ---------- */
+const ttl=(tag,name,unit)=>AR?`${unit} · ${name} · ${tag}`:`${tag}  ${name}  ${unit}`;
+const ttl2=(name,unit)=>AR?`${unit} · ${name}`:`${name}  ${unit}`;
+function tierName(x){return t('tier_'+x)}
+function panel(l,tp,w,h,title,tag,body,cls=''){if(AR)l=1888-l-w;return `<div class="panel" style="left:${l}px;top:${tp}px;width:${w}px;height:${h}px"><div class="ph ${cls}"><span>${title}</span><span class="sp"></span><span class="tag mono">${tag||''}</span></div>${body}</div>`}
+function hdr(ep,nowh){document.getElementById('t_plant').textContent=t('plant');document.getElementById('t_sub').textContent=t('plant_sub');document.getElementById('t_clock').textContent=nowh==null?'':t('replay_time')+' '+f(nowh,1)+' h';
+  document.getElementById('f_disc').textContent=t('disclaimer');document.getElementById('f_src').textContent=ep}
+const PAHL={y:K.pah_bar,text:'PAH '+K.pah_bar+' bar',color:C.alert,left:false};
+
+/* ---------- screen 1: plant view ---------- */
+const TAGROWS=[['GH2-PT-101','pressure','bar(a)',1],['GH2-TT-101','gas_temp','°C',1],['GH2-TT-102','wall_temp','°C',1],['GH2-AT-101','gas_det','%LFL',1],['GH2-FT-101','fill_flow','kg/s',4],['GH2-FT-102','disc_flow','kg/s',4],['GH2-SE-101','strain','µε',0],['GH2-TT-901','ambient','°C',1]];
+function s1(){const e=E.leak05,R=e.rows,now=DATA.now.s12,x0=now-30;hdr(e.episode+' · '+t('src_ep_note'),now);
+  const W=win(R,x0,now,['P','T','H2','comp','inlet','dvalve','prv','static']);
+  const mods=DATA.overview;
+  let rows=mods.map((m,i)=>`<tr${i==0?' style="background:#f3f7f7"':''}><td class="mono b">${m.module}</td><td class="n mono">${f(m.P,1)}</td><td class="n mono">${f(m.T,1)}</td><td class="mono">${m.comp?t('run'):t('stop')}</td><td class="${m.static?'al b':'mut'}">${m.static?t('active'):t('quiet')}</td></tr>`).join('');
+  const left=`<div class="pb"><table class="dense"><tr><th>${t('module')}</th><th class="n">${t('p_short')}</th><th class="n">${t('t_short')}</th><th>${t('compressor')}</th><th>${t('static_alarm_s')}</th></tr>${rows}</table>
+    <div style="margin-top:10px;padding:8px 0;border-top:1px solid var(--rule)"><div class="b" style="font-size:24px">${t('no_static_title')}</div><div class="mut" style="margin-top:6px">${t('limits')}: PAH ${K.pah_bar} / PAHH ${K.pahh_bar} bar(a) · TAH 85 / TAHH 100 °C · H₂ 25 / 50 %LFL</div></div>
+    <div class="mut" style="margin-top:6px">${t('overview_note')}</div>
+    <div class="b" style="margin:14px 0 4px 0;font-size:22px">M01 · ${t('tags_now')}</div>
+    <table class="dense">${TAGROWS.map(r=>`<tr><td class="mono" style="width:176px">${r[0]}</td><td>${t(r[1])}</td><td class="n mono b">${f(mods[0].tags[r[0]],r[3])}</td><td class="mut"><bdi dir="ltr">${r[2]}</bdi></td></tr>`).join('')}</table></div>`;
+  const wC=1272-28;
+  const pc=chart({w:wC,h:280,x0,x1:now,y0:200,y1:320,yticks:[200,240,280,320],series:[{x:W.t,y:W.P,color:C.plant}],hlines:[PAHL],texts:[{px:164,py:30,text:ttl('GH2-PT-101',t('pressure'),'bar(a)'),color:C.plant,bold:true}]});
+  const Tmin=Math.floor(Math.min(...W.T)/10)*10,Tmax=Math.ceil(Math.max(...W.T)/10)*10;
+  const tc=chart({w:wC,h:156,x0,x1:now,y0:Tmin,y1:Tmax,yticks:ticks(Tmin,Tmax,2),series:[{x:W.t,y:W.T,color:C.plant}],texts:[{px:164,py:26,text:ttl('GH2-TT-101',t('gas_temp'),'°C'),color:C.plant,bold:true}]});
+  const h2=chart({w:wC,h:112,x0,x1:now,y0:0,y1:50,yticks:[0,25,50],series:[{x:W.t,y:W.H2,color:C.plant}],hlines:[{y:25,text:'25 %LFL',color:C.alert,left:false}],texts:[{px:164,py:24,text:ttl('GH2-AT-101',t('gas_det'),'%LFL'),color:C.plant,bold:true}]});
+  const sw=wC,sh=34;
+  const st=[strip({w:sw,h:sh,x0,x1:now,t:W.t,v:W.comp,color:'#566370',label:t('compressor_s')}),strip({w:sw,h:sh,x0,x1:now,t:W.t,v:W.inlet,color:'#566370',label:t('inlet_v')}),strip({w:sw,h:sh,x0,x1:now,t:W.t,v:W.dvalve,color:'#566370',label:t('disc_v')}),strip({w:sw,h:sh,x0,x1:now,t:W.t,v:W.prv,color:'#566370',label:t('prv')})].join('');
+  const sa=strip({w:sw,h:44,x0,x1:now,t:W.t,v:W.static,color:C.alert,label:t('static_alarm_s')});
+  const ax=chart({w:wC,h:46,x0,x1:now,y0:0,y1:1,yticks:[],axis:true,mt:0}).svg;
+  const right=`<div class="pb" style="padding-top:4px">${pc.svg}${tc.svg}<div style="margin:4px 0 2px 0">${st}</div>${h2.svg}${sa}${ax}<div style="text-align:end;margin-top:-6px" class="mut">${t('x_replay_h')}</div></div>`;
+  document.getElementById('app').innerHTML=panel(0,0,600,952,t('p_modules'),t('read_only'),left)+panel(616,0,1272,952,t('p_trends')+' · M01',e.episode,right)}
+
+/* ---------- screen 2: with HYDRAI ---------- */
+function alertMarks(e,x0,x1){const o=e.onset_h,a=e.first_alert_h;return [{x:o,color:'#8a939b',dash:'5 4',width:1.3},{x:a,color:C.hy,width:2}]}
+function s2(){const e=E.leak05,R=e.rows,now=DATA.now.s12,x0=now-30,o=e.onset_h,a=e.first_alert_h;hdr(e.episode,now);
+  const W=win(R,x0,now,['P','T','H2','comp','static','inv','Lr','Llo','Lhi']);
+  const wl=840-28,wr=1040-28;
+  const vl=[{x:o,color:'#8a939b',dash:'5 4',width:1.3},{x:a,color:C.hy,width:2}];
+  const pc=chart({w:wl,h:330,x0,x1:now,y0:200,y1:320,yticks:[200,240,280,320],series:[{x:W.t,y:W.P,color:C.plant}],hlines:[PAHL],vlines:vl,texts:[{px:164,py:30,text:ttl('GH2-PT-101',t('pressure'),'bar(a)'),color:C.plant,bold:true},{x:a+0.4,py:272,text:'',anchor:'start'}]});
+  const Tmin=Math.floor(Math.min(...W.T)/10)*10,Tmax=Math.ceil(Math.max(...W.T)/10)*10;
+  const tc=chart({w:wl,h:170,x0,x1:now,y0:Tmin,y1:Tmax,yticks:ticks(Tmin,Tmax,2),series:[{x:W.t,y:W.T,color:C.plant}],vlines:vl,texts:[{px:164,py:26,text:ttl('GH2-TT-101',t('gas_temp'),'°C'),color:C.plant,bold:true}]});
+  const h2=chart({w:wl,h:120,x0,x1:now,y0:0,y1:50,yticks:[0,25,50],series:[{x:W.t,y:W.H2,color:C.plant}],hlines:[{y:25,text:'25 %LFL',color:C.alert}],vlines:vl,texts:[{px:164,py:24,text:ttl('GH2-AT-101',t('gas_det'),'%LFL'),color:C.plant,bold:true}]});
+  const cs=strip({w:wl,h:34,x0,x1:now,t:W.t,v:W.comp,color:'#566370',label:t('compressor_s'),vlines:vl});
+  const sa=strip({w:wl,h:44,x0,x1:now,t:W.t,v:W.static,color:C.alert,label:t('static_alarm_s'),vlines:vl});
+  const ax=chart({w:wl,h:46,x0,x1:now,y0:0,y1:1,yticks:[],axis:true,mt:0}).svg;
+  const left=`<div class="pb" style="padding-top:4px">${pc.svg}${tc.svg}${cs}${h2.svg}${sa}${ax}<div style="text-align:end;margin-top:-6px" class="mut">${t('x_replay_h')}</div></div>`;
+  const imin=Math.floor(Math.min(...W.inv)/10)*10,imax=Math.ceil(Math.max(...W.inv)/10)*10;
+  const ic=chart({w:wr,h:310,x0,x1:now,y0:imin,y1:imax,yticks:ticks(imin,imax,4),series:[{x:W.t,y:W.inv,color:C.hy,width:1.8}],vlines:vl,
+    texts:[{px:164,py:30,text:ttl2(t('comp_inv'),'kg'),color:C.hy,bold:true},{x:o-0.25,py:64,anchor:'end',text:(AR?f(o,1)+' h · '+t('onset_gt'):t('onset_gt')+' · '+f(o,1)+' h'),color:C.mut},{x:a+0.3,py:64,anchor:'start',text:'HYDRAI · '+f(a,1)+' h',color:C.hy,bold:true}]});
+  const lmax=Math.ceil(Math.max(...W.Lhi.filter(v=>v!=null))/5)*5;
+  const lc=chart({w:wr,h:240,x0,x1:now,y0:0,y1:lmax,yticks:ticks(0,lmax,3),series:[{x:W.t,y:W.Lr,color:C.hy,width:1.8}],bands:[{x:W.t,lo:W.Llo,hi:W.Lhi,color:C.hy}],vlines:vl,axis:true,
+    texts:[{px:164,py:30,text:ttl2(t('leak_rate_est'),'kg/h'),color:C.hy,bold:true},{px:wr-20,py:206-44,text:'',anchor:'end'}]});
+  const gap=e.first_operator15_h-a;
+  const tb=`<table style="margin-top:2px"><tr><th>${t('detector')}</th><th class="n">${t('first_alarm')}<br><span class="mut">${t('replay_h')}</span></th><th class="n">${t('after_onset')}<br><span class="mut">h</span></th></tr>
+   <tr><td class="hy b">HYDRAI</td><td class="n mono hy b">${f(a,1)}</td><td class="n mono hy b">+${f(a-o,2)}</td></tr>
+   <tr><td class="al b">${t('static_alarms')}</td><td class="n al b" colspan="2">${t('none_episode')}</td></tr>
+   <tr><td class="wa b">${t('op_proxy')}<br><span class="mut" style="font-weight:400;font-size:19px">${t('op_note_short')}</span></td><td class="n mono wa b">${f(e.first_operator15_h,1)}</td><td class="n mono wa b">+${f(e.first_operator15_h-o,1)}</td></tr>
+   <tr><td colspan="3" class="b" style="font-size:24px;border-bottom:none;padding-top:10px">${t('gap_line').replace('{g}',f(gap,1))}</td></tr></table>`;
+  const right=`<div class="pb" style="padding-top:4px">${ic.svg}${lc.svg}<div style="text-align:end;margin-top:-6px" class="mut">${t('x_replay_h')}</div>${tb}</div>`;
+  const ann=`<div class="lbl" style="position:absolute;left:0;top:0"></div>`;
+  document.getElementById('app').innerHTML=panel(0,0,840,952,t('p_plant'),t('read_only')+' · M01',left)+panel(856,0,1032,952,t('p_hydrai'),t('addon'),right,'hy')}
+
+/* ---------- alert card (screens 3 and 7) ---------- */
+function decisionRows(d,kind){
+  const cls=AR?d.class_name_ar:d.class_name_en, p=d.posterior[String(d.class)];
+  const rows=[];
+  rows.push([t('class'),`<span class="b" style="font-size:26px">${cls}</span> <span class="mono">${p>=0.9995?'100':f(100*p,1)} %</span> <span class="mut">${t('probability')}</span>`]);
+  return rows}
+function actionRows(d){const pr=d.procedure;return [[t('action'),`<span class="b" style="font-size:24px">${AR?pr.action_ar:pr.action_en}</span>`],[t('why'),AR?pr.reason_ar:pr.reason_en]]}
+function buttons(){return `<div style="margin-top:6px"><span class="btn ok">${t('approve')}</span><span class="btn no">${t('reject')}</span></div>`}
+function s3(){const e=E.leak05,d=DATA.decisions.leak05[0],o=e.onset_h;hdr(e.episode,d.t_s/3600);
+  const est=d.leak_estimate,lr=est.leak_rate,od=est.orifice_diameter;
+  const ev=e.events[0],appr=(ev.approval_s-ev.t_watch_s)/60;
+  const rows=[...decisionRows(d),
+   [t('leak_rate'),`<span class="mono b" style="font-size:30px">${f(lr.value,1)}</span> <bdi dir="ltr">kg/h</bdi> <span class="mono mut">(${f(lr.lo,1)} – ${f(lr.hi,1)})</span> <span class="mut">${t('interval95')}</span>`],
+   [t('orifice'),`<span class="mono b">${f(od.value,2)}</span> <bdi dir="ltr">mm</bdi> <span class="mono mut">  (${f(od.lo,2)} – ${f(od.hi,2)})</span>`],
+   [t('released'),`<span class="mono b" style="font-size:30px">${f(d.released_kg,1)}</span> <bdi dir="ltr">kg</bdi> <span class="mut">${t('released_note')}</span>`],
+   [t('warned_at'),`<span class="mono">${f(d.t_s/3600,2)} h</span> <span class="mut">(${t('replay_h')})</span> · <span class="mono hy b">+${f(d.t_s/3600-o,2)} h</span> <span class="mut">${t('after_onset_l')}</span>`],
+   [t('static_now'),`<span class="b">${t('quiet')}</span> <span class="mut">${t('no_static_short')}</span>`],
+   ...actionRows(d)];
+  const body=`<div class="tier-band tier-${d.tier}"><span>${t('tier_'+d.tier).toUpperCase()}</span><span style="font-weight:400;font-size:22px">${t('alert_by')} · ${f(d.t_s/3600,2)} h</span></div>
+    <div class="pb"><table class="kv">${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>${buttons()}<div class="mut" style="margin-top:8px">${t('sim_op').replace('{m}',f(appr,0))}</div><div class="b" style="margin:16px 0 4px 0;font-size:22px">${t('evidence')}</div><table>${d.trace.filter(c=>['T2_inventory_leak','T9_twin_verifier','T12_alarm_context'].includes(c.tool)).map(c=>`<tr><td class="mono" style="width:230px">${c.tool}</td><td>${oneLine(c)}</td></tr>`).join('')}</table></div>`;
+  // right: decision history (from the replay decisions)
+  const hist=DATA.decisions.leak05.slice(0,6).map(x=>`<tr><td class="mono">+${f((x.t_s/3600-o)*60,0)}</td><td>${t('tier_'+x.tier)}</td><td class="n mono">${x.leak_estimate?f(x.leak_estimate.leak_rate.value,1):'–'}</td><td class="n mono">${x.leak_estimate?`${f(x.leak_estimate.leak_rate.lo,1)}–${f(x.leak_estimate.leak_rate.hi,1)}`:'–'}</td><td class="n mono">${x.released_kg==null?'–':f(x.released_kg,1)}</td></tr>`).join('');
+  const R=e.rows,t0=d.t_s/3600-0.5,t1=d.t_s/3600+6;const W=win(R,t0,t1,['Lr','Llo','Lhi']);
+  const lmax=Math.ceil(Math.max(...W.Lhi.filter(v=>v!=null))/5)*5;
+  const lc=chart({w:700-28,h:340,x0:t0,x1:t1,y0:0,y1:lmax,yticks:ticks(0,lmax,3),xticks:[73,74,75,76,77,78,79],series:[{x:W.t,y:W.Lr,color:C.hy,width:1.8}],bands:[{x:W.t,lo:W.Llo,hi:W.Lhi,color:C.hy}],vlines:[{x:d.t_s/3600,color:C.hy,width:2}],axis:true,xd:1,
+     texts:[{px:664,py:30,anchor:'end',text:ttl2(t('leak_rate_est'),'kg/h'),color:C.hy,bold:true}]});
+  const side=`<div class="pb"><div class="mut" style="margin-bottom:2px">${t('hist_title')}</div><table><tr><th>${t('min_after')}</th><th>${t('tier')}</th><th class="n">kg/h</th><th class="n">${t('interval95')}</th><th class="n">${t('released_short')} kg</th></tr>${hist}</table></div>
+    <div class="pb" style="padding-top:0">${lc.svg}<div class="mut" style="text-align:end;margin-top:-4px">${t('x_replay_h')}</div></div>`;
+  document.getElementById('app').innerHTML=panel(0,0,1160,952,t('p_alert'),'M01 · '+e.episode,body,'hy')+panel(1176,0,712,952,t('p_follow'),t('read_only'),side)}
+
+/* ---------- screen 4: reasoning trace ---------- */
+function oneLine(c){const r=c.result,es=r.estimate||{};const v=r.verdict;
+  if(c.tool==='T1_data_integrity'||c.tool==='T2_inventory_leak'||c.tool==='T12_alarm_context')return AR?r.text_ar:r.text_en;
+  if(c.tool==='T9_twin_verifier'){const a=es.rms_error_hypothesis,b=es.rms_error_healthy,w=r.fields.window_min,fit=r.fields.hypothesis==='leak_fit';
+    return t(fit?'t9_fit':'t9_replay').replace('{w}',w).replace('{a}',f(a.value,2)).replace('{b}',f(b.value,2))}
+  if(c.tool==='T11_hold_test_planner'){const h=es.hold_duration;return h?t('t11').replace('{h}',f(h.value,0)):(AR?r.text_ar:r.text_en)}
+  if(c.tool==='T10_forecast_consequence')return t('t10');
+  return AR?r.text_ar:r.text_en}
+function s4(){const e=E.leak05,d=DATA.decisions.leak05[0],o=e.onset_h,ev=e.events[0];hdr(e.episode,d.t_s/3600);
+  const st=[['MONITOR',t('st_monitor'),null],['SUSPECT',t('st_suspect'),f(ev.t_suspect_s/3600,2)+' h'],['INVESTIGATE',t('st_invest'),f(ev.t_watch_s/3600,2)+' h'],['DECIDE',t('st_decide'),f(d.t_s/3600,2)+' h'],['AWAIT_APPROVAL',t('st_await'),f(ev.approval_s/3600,2)+' h'],['FOLLOW_UP',t('st_follow'),null],['CLOSE',t('st_close'),f(ev.closed_s/3600,1)+' h']];
+  const w=(1856-6*14)/7;
+  let sh='';st.forEach((s,i)=>{const on=(s[0]==='INVESTIGATE');const left=AR?(1856-(i+1)*w-i*14):(i*(w+14));sh+=`<div class="step ${on?'on':''}" style="left:${left}px;top:0;width:${w}px"><span class="mono" style="font-size:20px">${s[0]}</span><span class="t">${s[1]}${s[2]?' · '+s[2]:''}</span></div>`;
+    if(i<6){const ax=AR?(left-14):(left+w);sh+=`<div style="position:absolute;left:${ax}px;top:50px;width:14px;height:2px;background:var(--rule)"></div>`}});
+  const calls=d.trace.map(c=>`<tr><td class="mono">${c.order}</td><td class="mono b">${c.tool}</td><td class="mono ${c.result.verdict.match(/accept|suspect|recommended|forecast/)?'hy':''}">${c.result.verdict}</td><td>${oneLine(c)}</td><td class="n mono">${f(c.runtime_ms,2)}</td></tr>`).join('');
+  const tot=d.trace.reduce((s,c)=>s+c.runtime_ms,0);
+  const dec=`<div class="b" style="font-size:26px">${t('decide_line').replace('{tier}',t('tier_'+d.tier).toUpperCase()).replace('{cls}',AR?d.class_name_ar:d.class_name_en).replace('{p}',f(100*d.posterior[String(d.class)],0))}</div><div style="margin-top:4px">${AR?d.procedure.action_ar:d.procedure.action_en}</div>`;
+  const body=`<div class="pb" style="position:relative;height:122px;padding:0 14px;margin-top:14px"><div style="position:relative;height:110px">${sh}</div></div>
+   <div class="pb"><div class="b" style="margin:6px 0 8px 0;font-size:23px">${t('inv_calls')} <span class="mut" style="font-weight:400">· ${t('inv_at')} ${f(d.t_s/3600,2)} h · ${d.trace.length} ${t('calls')} · ${f(tot,0)} ms</span></div>
+   <table class="roomy" style="font-size:23px"><tr><th>#</th><th>${t('tool')}</th><th>${t('verdict')}</th><th>${t('result')}</th><th class="n">ms</th></tr>${calls}</table></div>
+   <div class="pb" style="border-top:1px solid var(--rule);margin-top:6px">${dec}</div>`;
+  document.getElementById('app').innerHTML=`<div class="panel" style="left:0;top:0;width:1888px;height:952px"><div class="ph hy"><span>${t('p_trace')}</span><span class="sp"></span><span class="tag mono">M01 · ${e.episode}</span></div>${body}</div>`}
+
+/* ---------- screen 5: who warned when ---------- */
+function s5(){const e=E.leak05,o=e.onset_h,a=e.first_alert_h,op=e.first_operator15_h;hdr(e.episode,null);
+  const W=1856-28,H=380,ml=300,mr=60,x1=24;const X=v=>ml+(v/x1)*(W-ml-mr);
+  let s=`<svg class="s0" width="${W}" height="${H+120}" viewBox="0 0 ${W} ${H+120}">`;
+  for(let v=0;v<=24;v+=4){s+=`<line class="grid" x1="${X(v)}" x2="${X(v)}" y1="20" y2="${H}"/><text class="tick m" x="${X(v)}" y="${H+30}" text-anchor="middle">${v}</text>`}
+  s+=`<text x="${W-mr}" y="${H+62}" text-anchor="end" style="fill:${C.mut}">${t('x_after_onset')}</text>`;
+  const rowsY={h:90,s:190,o:290};
+  const lab=(y,txt,sub,col)=>`<text x="${ml-20}" y="${y-2}" text-anchor="end" style="fill:${col};font-weight:600;font-size:23px">${txt}</text><text x="${ml-20}" y="${y+24}" text-anchor="end" style="fill:${C.mut};font-size:19px">${sub}</text><line x1="${ml}" x2="${W-mr}" y1="${y}" y2="${y}" stroke="#d6dade"/>`;
+  s+=lab(rowsY.h,'HYDRAI',t('hy_sub'),C.hy)+lab(rowsY.s,t('static_alarms'),t('static_sub'),C.alert)+lab(rowsY.o,t('op_proxy'),t('op_sub'),C.warn);
+  s+=`<line x1="${X(0)}" x2="${X(0)}" y1="20" y2="${H}" stroke="#7b848c" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${X(0)+8}" y="40" style="fill:${C.mut}">${t('onset_gt')}</text>`;
+  const dot=(x,y,col,txt,anchor,dy)=>`<circle cx="${X(x)}" cy="${y}" r="9" fill="${col}"/><text x="${X(x)+(anchor==='end'?-16:16)}" y="${y+dy}" text-anchor="${anchor}" class="m" style="fill:${col};font-weight:600;font-size:23px">${txt}</text>`;
+  s+=dot(a-o,rowsY.h,C.hy,'+'+f(a-o,2)+' h · '+f(e.kg_at_alert,1)+' kg','start',-14);
+  s+=`<text x="${X(0)+30}" y="${rowsY.s-14}" style="fill:${C.alert};font-weight:600;font-size:23px">${t('static_none')}</text>`;
+  s+=dot(op-o,rowsY.o,C.warn,'+'+f(op-o,1)+' h · '+f(e.kg_at_operator15,1)+' kg','end',-16);
+  s+=`<line x1="${X(a-o)}" x2="${X(op-o)}" y1="${H-14}" y2="${H-14}" stroke="#2f3a45" stroke-width="1.5"/><line x1="${X(a-o)}" x2="${X(a-o)}" y1="${H-22}" y2="${H-6}" stroke="#2f3a45"/><line x1="${X(op-o)}" x2="${X(op-o)}" y1="${H-22}" y2="${H-6}" stroke="#2f3a45"/>
+    <text x="${(X(a-o)+X(op-o))/2}" y="${H-26}" text-anchor="middle" class="m" style="font-weight:600;font-size:24px">${t('gap_short').replace('{g}',f(op-a,1))}</text></svg>`;
+  const tb=`<table style="margin-top:6px"><tr><th>${t('detector')}</th><th class="n">${t('after_onset')} (h)</th><th class="n">${t('kg_before')}</th></tr>
+    <tr><td class="hy b">HYDRAI</td><td class="n mono hy b">+${f(a-o,2)}</td><td class="n mono hy b">${f(e.kg_at_alert,1)}</td></tr>
+    <tr><td class="al b">${t('static_alarms')}</td><td class="n al b">${t('none_episode')}</td><td class="n mono mut">–</td></tr>
+    <tr><td class="wa b">${t('op_proxy')}</td><td class="n mono wa b">+${f(op-o,1)}</td><td class="n mono wa b">${f(e.kg_at_operator15,1)}</td></tr></table>
+    <div class="mut" style="margin-top:8px">${t('kg_note')}</div><div class="mut" style="margin-top:4px">${t('op_def').replace('{x}',f(DATA.op.pressure_bar,1)).replace('{y}',f(DATA.op.temp_k,1))}</div>`;
+  document.getElementById('app').innerHTML=`<div class="panel" style="left:0;top:0;width:1888px;height:952px"><div class="ph hy"><span>${t('p_who')}</span><span class="sp"></span><span class="tag mono">M01 · ${e.episode}</span></div><div class="pb" style="padding-top:14px">${s}${tb}</div></div>`}
+
+/* ---------- screen 6: fleet ---------- */
+function s6(){const nowh=DATA.now.fleet;hdr(t('fleet_src'),nowh);
+  const tiles=DATA.fleet.map((m,i)=>{const col=i%3,row=Math.floor(i/3);const w=(1888-2*16)/3,h=(952-16)/2;const left=AR?(1888-(col+1)*w-col*16):(col*(w+16));
+    const tier=m.tier,tn=tier==='none'?'normal':tier;const cc={normal:'#9aa2a9',watch:'#e9b13c',alert:'#d9534a',critical:C.alert}[tn];
+    const rows=[[t('gas_p'),`<span class="mono b">${f(m.P,1)}</span> <bdi dir="ltr">bar(a)</bdi>`],[t('gas_t'),`<span class="mono b">${f(m.T,1)}</span> <bdi dir="ltr">°C</bdi>`],[t('compressor'),m.comp?t('run'):t('stop')],[t('comp_inv_s'),`<span class="mono b">${f(m.inv,1)}</span> <bdi dir="ltr">kg</bdi>`],[t('static_alarms'),m.static?t('active'):t('quiet')],[t('hy_score'),`<span class="mono b">${f(m.score,3)}</span> <span class="mut">(${t('watch_l')} <span class="mono">${f(m.watch,3)}</span> · ${t('alert_l')} <span class="mono">${f(m.alert,3)}</span>)</span>`],[t('hy_state'),`<span class="mono">${m.state}</span>`+(tier!=='none'?` · ${AR?m.cls_ar:m.cls}`:'')]];
+    return `<div class="panel" style="left:${left}px;top:${row*(h+16)}px;width:${w}px;height:${h}px"><div style="height:64px;display:flex;align-items:center;gap:18px;padding:0 18px;border-bottom:1px solid var(--rule);background:${tn==='normal'?'#f6f7f8':(tn==='watch'?'#fbf1d9':'#f8e2e0')}"><span class="mono b" style="font-size:34px">${m.module}</span><span class="b" style="font-size:26px;color:${tn==='normal'?'#4a5560':(tn==='watch'?'#7a5200':C.alert)}">${t('tier_'+tn).toUpperCase()}</span><span style="flex:1"></span><span class="mono mut" style="font-size:19px">${m.episode}</span></div><div style="border-inline-start:8px solid ${cc};height:calc(100% - 64px);padding:10px 18px"><table class="kv">${rows.map(r=>`<tr><td style="width:250px">${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div></div>`}).join('');
+  document.getElementById('app').innerHTML=tiles}
+
+/* ---------- screen 7: intercooler failure ---------- */
+function s7(){const e=E.interc,dd=DATA.decisions.interc;const d=dd.find(x=>x.tier==='alert'||x.tier==='critical');const a=d.t_s/3600;hdr(e.episode,a);
+  const t3=d.trace.find(c=>c.tool==='T3_thermal_state'),t12=d.trace.find(c=>c.tool==='T12_alarm_context');const ex=t3.result.estimate.excess_temperature;
+  const rows=[...decisionRows(d),
+   [t('excess_t'),`<span class="mono b" style="font-size:30px">${f(ex.value,1)}</span> <bdi dir="ltr">K</bdi> <span class="mono mut">(${f(ex.lo,1)} – ${f(ex.hi,1)})</span> <span class="mut">${t('interval95')}</span>`],
+   [t('diagnosis'),AR?t3.result.text_ar:t3.result.text_en],
+   [t('warned_at'),`<span class="mono">${f(a,2)} h</span> <span class="mut">(${t('replay_h')})</span>`],
+   [t('static_now'),AR?t12.result.text_ar:t12.result.text_en],
+   ...actionRows(d)];
+  const ev7=`<div class="b" style="margin:16px 0 4px 0;font-size:22px">${t('evidence')}</div><table>${d.trace.filter(c=>['T1_data_integrity','T3_thermal_state','T12_alarm_context'].includes(c.tool)).map(c=>`<tr><td class="mono" style="width:230px">${c.tool}</td><td class="mono" style="width:270px">${c.result.verdict}</td><td class="n mono" style="width:90px">${f(c.runtime_ms,2)} ms</td></tr>`).join('')}</table>`;
+  const body=`<div class="tier-band tier-${d.tier}"><span>${t('tier_'+d.tier).toUpperCase()}</span><span style="font-weight:400;font-size:22px">${t('alert_by')} · ${f(a,2)} h</span></div>
+    <div class="pb"><table class="kv">${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>${buttons()}<div class="mut" style="margin-top:8px">${t('sim_op_gen')}</div>${ev7}</div>`;
+  const R=e.rows,x0=a-24,x1=a+4;const W=win(R,x0,x1,['T']);const Tmin=Math.floor(Math.min(...W.T)/10)*10,Tmax=Math.ceil(Math.max(...W.T)/10)*10;
+  const tc=chart({w:712-28,h:380,x0,x1,y0:Tmin,y1:Tmax,yticks:ticks(Tmin,Tmax,2),xticks:[a-24,a-18,a-12,a-6,a],xd:0,series:[{x:W.t,y:W.T,color:C.plant}],vlines:[{x:a,color:C.hy,width:2}],texts:[{x:a-0.3,py:56,anchor:'end',text:'HYDRAI · '+f(a,1)+' h',color:C.hy,bold:true}],axis:true,
+    texts:[{px:164,py:30,text:ttl('GH2-TT-101',t('gas_temp'),'°C'),color:C.plant,bold:true}]});
+  const rs=t3.result.series.gas_residual_K_last6h_every15min;const rx=rs.map((_,i)=>a-6+i*0.25);const rmin=Math.min(0,Math.floor(Math.min(...rs))),rmax=Math.ceil(Math.max(...rs));
+  const rc=chart({w:712-28,h:330,x0:a-6,x1:a,y0:rmin,y1:rmax,yticks:ticks(rmin,rmax,3),series:[{x:rx,y:rs,color:C.hy,width:1.8}],axis:true,hlines:[{y:0,text:'',color:'#8a939b',dash:'3 3'}],
+    texts:[{px:164,py:30,text:ttl2(t('t3_resid'),'K'),color:C.hy,bold:true}]});
+  const side=`<div class="pb">${tc.svg}<div class="mut" style="text-align:end;margin-top:-4px">${t('x_replay_h')}</div></div><div class="pb" style="padding-top:0">${rc.svg}<div class="mut" style="text-align:end;margin-top:-4px">${t('x_replay_h')}</div></div>`;
+  document.getElementById('app').innerHTML=panel(0,0,1160,952,t('p_alert'),'M01 · '+e.episode,body,'hy')+panel(1176,0,712,952,t('p_thermal_ev'),t('read_only'),side)}
+
+const fn={1:s1,2:s2,3:s3,4:s4,5:s5,6:s6,7:s7};
+fn[SCREEN]();
+if(AR){document.querySelectorAll('#app .mono, #t_clock').forEach(el=>{if(el.closest('svg'))return;const txt=el.textContent.trim();if(/^[A-Za-z0-9_+\-–.,:%()\/ µ°·]*$/.test(txt)&&/\d|[A-Z]/.test(txt)){el.style.direction='ltr';el.style.unicodeBidi='isolate';if(el.tagName==='TD'||el.tagName==='TH')el.style.textAlign=el.classList.contains('n')?'right':'right'}})}
+</script>
+</body>
+</html>
