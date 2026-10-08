@@ -1,0 +1,20 @@
+dashboard: reference configuration, not a verified Saudi system
+PROVISIONAL: static-alarm limits are the workbook's 'simulation threshold' values (Sec. 5/6; hydrogen 20/40 %LFL unverified), not the plant's real alarm settings
+static alarm level: any
+
+[dev           standard                ] episodes=168 faults=144  false alarms/week=0.000 (95% CI 0.000-0.028; 0 events / 131.3 wk)  detected 48/144  median delay vs onset 0.9 h
+[dev           overfill_hydraulic_lock ] episodes=12 faults=6  false alarms/week=0.000 (95% CI 0.000-0.240; 0 events / 15.4 wk)  detected 6/6  median delay vs onset 17.5 h
+[unseen        standard                ] episodes=84 faults=72  false alarms/week=0.000 (95% CI 0.000-0.056; 0 events / 65.5 wk)  detected 24/72  median delay vs onset 0.8 h
+[unseen        overfill_hydraulic_lock ] episodes=6 faults=3  false alarms/week=0.000 (95% CI 0.000-0.478; 0 events / 7.7 wk)  detected 3/3  median delay vs onset 19.4 h
+[commissioning standard                ] episodes=9 faults=0  false alarms/week=0.000 (95% CI 0.000-0.205; 0 events / 18.0 wk)  detected 0/0  median delay vs onset -
+
+per fault type (dev, standard):
+  fault -1 unknown_anomaly          n= 24 detected  12/24  median delay 2.8 h
+  fault  1 sensor_fault             n= 12 detected  12/12  median delay 0.1 h
+  fault  2 insulation_degradation   n= 24 detected   0/24  median delay -
+  fault  3 vacuum_degradation       n= 24 detected   0/24  median delay -
+  fault  4 abnormal_pressure_rise   n= 18 detected   0/18  median delay -
+  fault  5 containment_anomaly      n= 30 detected  24/30  median delay 0.7 h
+  fault  6 structural_concern       n= 12 detected   0/12  median delay -
+
+PROVISIONAL: static-alarm limits are the workbook's 'simulation threshold' values (Sec. 5/6; hydrogen 20/40 %LFL unverified), not the plant's real alarm settings

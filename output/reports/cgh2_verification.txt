@@ -1,0 +1,94 @@
+== 5a. reference numbers (CoolProp 'Hydrogen', 300 K, 10 m3), tolerance 2 % ==
+   inventory (kg)
+       30 bar     23.83  reference   23.8  +0.11 %
+       50 bar     39.25  reference   39.2  +0.13 %
+      200 bar    144.00  reference  144.0  -0.00 %
+      300 bar    204.26  reference  204.0  +0.13 %
+      350 bar    231.94  reference  232.0  -0.03 %
+      700 bar    390.53  reference  391.0  -0.12 %
+   dP/dT at constant density (bar/K)
+       30 bar    0.1007  reference  0.101  -0.33 %
+       50 bar    0.1685  reference  0.168  +0.28 %
+      200 bar    0.6876  reference  0.688  -0.06 %
+      300 bar    1.0373  reference  1.040  -0.26 %
+      350 bar    1.2116  reference  1.210  +0.13 %
+      700 bar    2.3985  reference  2.400  -0.06 %
+   0.1 mm choked leak, Cd = 1 (g/s)
+       30 bar   0.01450  reference  0.014  +3.54 %   (reference is quoted to 2 significant figures; 0.014496 rounds to 0.014)
+      300 bar   0.14057  reference  0.141  -0.31 %
+      350 bar   0.16301  reference  0.163  +0.00 %
+   => ALL WITHIN TOLERANCE
+
+== 5b. healthy 14-day runs, medium class, all alarms active (PAH 306 / PAHH 315 bar, TAH 85 / TAHH 100 C, H2 25 / 50 %LFL) ==
+   vesseldemand       runs with alarm max P (bar) max gas T (C)  mean gas T range (K)   compressor stop
+   light refuelling     24          0       302.7          58.4                  37.1   fixed at MOP
+   light industrial     24          0       300.8          59.4                  28.8   fixed at MOP
+   light refuelling     24          0       301.6          61.2                  41.3   compensated (reference 60 C)
+   light industrial     24          0       301.8          61.6                  31.7   compensated (reference 60 C)
+   dark  refuelling     24          0       300.7          70.7                  45.6   compensated (reference 70 C)
+   dark  industrial     24          0       301.4          71.0                  39.9   compensated (reference 70 C)
+   => base case (light vessel, compensated stop, the default): 0 alarm events in 48 healthy runs.
+      The literal FIXED stop at MOP passes these dev profiles but leaves ~6 bar (PAH = 1.02 x MOP) against a 6-9 bar afternoon thermal rise: over 120 random units the peak is 1.018 x MOP,
+      and the generated unseen unit U01 (cool site, strong solar response) alarmed in 3 healthy segments once sensor error was added. The default is therefore the compensated stop (60 C reference: 0 of 120 alarm, peak 1.003 x MOP).
+      Dark vessel (+27 K sun-air, stress): a FIXED stop alarms (found by this check), so the dark variant uses a 70 C reference (0 of 48 healthy runs alarm; 60 C left 3 of 24).
+      Low class: 2 % of 50 bar is 1 bar = 6 K of margin (0.168 bar/K): a fixed stop alarms in 12/12 healthy runs; its OOD set uses a compensated stop (65 C; 0 of 48 alarm). Low class + dark vessel cannot be held below PAH (1 of 48 alarms even at 80 C) and is not in the dataset.
+
+== 5c. leak detectability (hold test: compressor off, no demand, leak starts at day 1; paired healthy twin; k = 3 sigma, 5 consecutive 60 s samples) ==
+   (i) raw pressure: sigma = hypot(A_P/2, dP/dT x std of the healthy gas temperature over the run): a bare pressure reading cannot tell a
+       thermal swing from a leak.   (ii) temperature-compensated inventory rho(P, T) x V: sigma from A_P/2 and hypot(A_T/2, 1 K bulk gradient).
+
+   class low (MOP 50 bar, 39 kg at 300 K)
+    leak mm  rate kg/h @MOP    (i) raw pressure    (ii) comp. inventory  ratio i/ii
+   sigmas used: sigma_P 0.12 bar, raw-pressure sigma 1.06 bar (thermal variability 8.0 K), sigma_T 1.03 K, sigma_inventory 0.15 kg
+       0.03            0.01         never (4 d)             never (4 d)           -
+       0.05            0.02         never (4 d)                  27.0 h           -
+        0.1            0.09              38.0 h                   6.9 h        5.5x
+       0.25            0.54               6.6 h                   1.1 h        5.9x
+        0.5            2.17               1.6 h                   0.3 h        5.3x
+          1            8.68               0.4 h                   0.1 h        3.9x
+
+   class medium (MOP 300 bar, 204 kg at 300 K)
+    leak mm  rate kg/h @MOP    (i) raw pressure    (ii) comp. inventory  ratio i/ii
+   sigmas used: sigma_P 0.50 bar, raw-pressure sigma 4.28 bar (thermal variability 5.2 K), sigma_T 1.03 K, sigma_inventory 0.62 kg
+       0.03            0.05         never (4 d)                  52.2 h           -
+       0.05            0.13         never (4 d)                  18.8 h           -
+        0.1            0.51              20.1 h                   4.7 h        4.3x
+       0.25            3.16               3.1 h                   0.8 h        4.0x
+        0.5           12.65               0.7 h                   0.2 h        3.2x
+          1           50.60               0.2 h                   0.1 h        2.8x
+
+   class high (MOP 350 bar, 232 kg at 300 K)
+    leak mm  rate kg/h @MOP    (i) raw pressure    (ii) comp. inventory  ratio i/ii
+   sigmas used: sigma_P 0.62 bar, raw-pressure sigma 4.66 bar (thermal variability 4.8 K), sigma_T 1.03 K, sigma_inventory 0.71 kg
+       0.03            0.05         never (4 d)                  51.2 h           -
+       0.05            0.15         never (4 d)                  18.5 h           -
+        0.1            0.59              18.0 h                   4.6 h        3.9x
+       0.25            3.67               2.7 h                   0.8 h        3.5x
+        0.5           14.67               0.6 h                   0.2 h        2.9x
+          1           58.68               0.2 h                   0.1 h        2.5x
+
+   Flow-based mass balance (leak rate vs the discharge-meter error), medium class, leak at MOP:
+     spec meter (1 % FS of 4 kg/min) error floor = 2.40 kg/h;  datasheet meter = 0.5 % of reading + 0.54 kg/h zero stability
+    leak mm   rate kg/h   vs spec floor  vs datasheet floor
+       0.03        0.05   NOT visible (0.02x)   NOT visible (0.08x)   
+       0.05        0.13   NOT visible (0.05x)   NOT visible (0.23x)   
+        0.1        0.51   NOT visible (0.21x)   NOT visible (0.94x)   
+       0.25        3.16   visible (1.32x)       visible (5.86x)       
+        0.5       12.65   visible (5.27x)       visible (23.43x)      
+          1       50.60   visible (21.09x)      visible (93.71x)      
+   => confirms the register finding: at 1 % FS a 0.1 mm leak (~0.5 kg/h) hides under a 2.4 kg/h meter error; datasheet-grade meters (~0.6 kg/h) are borderline.
+
+== 5d. timescale table, PRIMARY class (medium, MOP 300 bar, 10 m3) ==
+   healthy compressor cycle period (start to start)      : median 22.3 h  (IQR 13.6-32.8 h), 74 cycles in 6 x 14 d
+   healthy pressure change over 1 h without the compressor: median -0.60 bar/h, 5-95 % -9.26 .. +1.40 bar/h (demand + thermal)
+      thermal only (1 h windows with no gas drawn or added, n=1403): median -0.14 bar/h, 5-95 % -1.31 .. +1.50 bar/h  [healthy 'drift' is thermal, not a trend]
+   post-fill cooling drop (P at compressor stop minus P 3 h later, no restart, no gas drawn): median 8.49 bar, max 10.95 bar, n=34
+   gas-wall time constant 42 min; shell-ambient time constant 6.6 h; hoop strain 3.07 ue/bar
+   stuck compressor (starts at MOP = 300 bar, 20 kg/h, no demand): time to PAH 306 / PAHH 315 / PRV pop (330 bar set)
+      relief working : PAH 0.12 h, PAHH 0.31 h, PRV lift 0.63 h
+      relief blocked : PAH 0.12 h, PAHH 0.31 h, MAWP 0.62 h, 1.5 x MAWP (failure) 4.33 h
+   leak at 300 bar, no compressor: time to lose 1 % / 10 % of the inventory
+        0.1 mm  1 %:     4.1 h   10 %:    42.9 h   (initial rate 0.51 kg/h)
+       0.25 mm  1 %:     0.7 h   10 %:     6.9 h   (initial rate 3.16 kg/h)
+        0.5 mm  1 %:     0.2 h   10 %:     1.7 h   (initial rate 12.65 kg/h)
+

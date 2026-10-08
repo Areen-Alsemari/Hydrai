@@ -1,0 +1,92 @@
+{
+ "files": {
+  "hydrai_twin/cgh2_agent/__init__.py": "53aae713b6dc8d69ee591db26977c21022151949ee731db3013dff5ae97eb33b",
+  "hydrai_twin/cgh2_agent/agent.py": "ab5359dfea4151aa4868f83a8c14389b76c8957dc74952d209998225dadbe0e0",
+  "hydrai_twin/cgh2_agent/api.py": "978ec1d191c08fa86223f841a4c36cf0de0430025bfca20c9148647d2d7d6f4b",
+  "hydrai_twin/cgh2_agent/features.py": "22f7676ed3c3842ce8ac997d8eeba592a49adf35a2234f0bc76ca92b08b23191",
+  "hydrai_twin/cgh2_agent/fit.py": "ddb457d809d4ccfcc145ba8c14f70c01c5d0e6c98d0efd7b5becbfd0e5774f4e",
+  "hydrai_twin/cgh2_agent/fusion.py": "baa4c333949623f90c61229aafd010fb4e4c32fa0befcb0fec30813598c09ccb",
+  "hydrai_twin/cgh2_agent/llm.py": "ed19dbd85535d66ef8b5c829b3cdcf8cfbf5201960ecab543babd4b85a57c6c7",
+  "hydrai_twin/cgh2_agent/loader.py": "150c7f8455681cb176f4cfb8545c4238121f7dc189474d6d70ada8442b759845",
+  "hydrai_twin/cgh2_agent/replay.py": "0b8336ae0f96362db4f901af834c0ae2dbbb142b1cfd8b8100ea80b5259a16d8",
+  "hydrai_twin/cgh2_agent/session.py": "9907cb9ea122a2cb7b8f3cb2d14bf0f27042461ae51cacee6a880c05e8a8f8cb",
+  "hydrai_twin/cgh2_agent/stream.py": "ff9f2bf82449484bc5cc6bd70e121986afb89651578266422288535e790faa46",
+  "hydrai_twin/cgh2_agent/tools/__init__.py": "d08c14384cc11c1bf7dec0750eeb4e760832eb4e376f2b40647c5ca0c1c143f8",
+  "hydrai_twin/cgh2_agent/tools/common.py": "7580dad0b8ab1428524eb795e771eae4a663a24472ce6ed02a6d3c1b354bb4e4",
+  "hydrai_twin/cgh2_agent/tools/t10_forecast_consequence.py": "9ec2ecafae54765cb7ff82fca0ff4cfb04ddcfe616d9acb8c285da95db2a2243",
+  "hydrai_twin/cgh2_agent/tools/t11_hold_test_planner.py": "06360e7eb9d9b9785f6ba9774a06b280b567997a5bb8b5dec17bcfd05b109e04",
+  "hydrai_twin/cgh2_agent/tools/t12_alarm_context.py": "cbdfcf6401d4727278c8b945209da48fe1a3fbe1a428a8eed3dd58bdba9a65cc",
+  "hydrai_twin/cgh2_agent/tools/t13_procedures.py": "bdcd7d906c61c165d36618e2be18da126be6028c1ee17e2c90f6b806676a670e",
+  "hydrai_twin/cgh2_agent/tools/t1_data_integrity.py": "9e8ee4d07c3efb992f5f64bb51d83e684435a309abca3543270b12adf59e91b3",
+  "hydrai_twin/cgh2_agent/tools/t2_inventory_leak.py": "8d6ff6f61a39752ce788e8ecc362b5b0fee04f6959695d7c6b7bc4795e2c02c5",
+  "hydrai_twin/cgh2_agent/tools/t3_thermal_state.py": "d71a7b5a5b77db5e6ffb3c392fa4d10f1f10420e83b89341591a65cb01f01ec9",
+  "hydrai_twin/cgh2_agent/tools/t4_pressure_behaviour.py": "55cc9baeb817d6ae0b917eb06ebc342e20b7b9a5f60ef138f4ad3232a5148ddf",
+  "hydrai_twin/cgh2_agent/tools/t5_sensor_integrity.py": "d3390f9cee0e44aab669497a487906effe278d4494ac6b9f5ddd0066744948ee",
+  "hydrai_twin/cgh2_agent/tools/t6_structural.py": "fd8ae60649a807239f64a300af5465c01b5978fdeda21855d259792830885afd",
+  "hydrai_twin/cgh2_agent/tools/t9_twin_verifier.py": "becbbd05c68a2bbd599da3715d7446c1613bba49765b2ca0e57cf82ad2d553fa",
+  "hydrai_twin/cgh2/__init__.py": "fb14365d3e01dae6f63910a52225136d472fd53d024e31e905e182f7de600cbc",
+  "hydrai_twin/cgh2/config.py": "33b2999c1f353247c877cb80392bbe313f0f6fb67fd5ef3671332829e5ce6604",
+  "hydrai_twin/cgh2/dashboard.py": "9190c72d1f7a6ce537984140c8153edc962045b080099ee729759fd7f47087ad",
+  "hydrai_twin/cgh2/dataset.py": "59ff91d6aa4630ac393047ee54b616257befd4679056a5eea7eedc88c4a9b442",
+  "hydrai_twin/cgh2/demand.py": "d5361b9cdb625d0b46416b39538391892097036e5d441fb44bdfd92c957d5765",
+  "hydrai_twin/cgh2/episode.py": "976fa2ffa3454b5b401515a423c7a5afc3b8d7396c7a9a5569ef1bcfa8d12102",
+  "hydrai_twin/cgh2/gas.py": "73aef1e7e5df94b65cfaa380a7608c0fd7c41c339e301eebb262b44b45e81500",
+  "hydrai_twin/cgh2/profile.py": "7ad29de424ad810ac2c3ddb33aa04bce3e53738469c24c5f9be6e6ccd5189eea",
+  "hydrai_twin/cgh2/registry.py": "512a3833e651f98bb1937d216d62114f799cf93d87880de0564e6f81dce2908f",
+  "hydrai_twin/cgh2/sensor_view.py": "d2e73e9863be2d1d0174a759ea91ecf5dffc2770f02eaa9073bb35744b7eebb7",
+  "hydrai_twin/cgh2/vessel.py": "db1d19113de9275f682dc3fceecde3265a8cebe168f5e0a5b2ffdb22ccf2245c",
+  "ml/cgh2_agent.py": "c81696c82ea3f4775d28e07ba09775c2152026b265959bc98970c30691de3fea",
+  "ml/cgh2_baselines.py": "e1f67e39fd6e3b03a38fd09afd3b156cbae1b03382798b3a9ae4738bf1dba391",
+  "ml/cgh2_fast.py": "1470704264e7aaaceae3d9f653dbf90022551942ac1b0d3a94ada34a04267631",
+  "ml/cgh2_features.py": "7d22f16bd66fa35a6b76d7b780e1504867a2eac85f623256ff81655c4596a197",
+  "ml/classical_baselines.py": "db5682cfec0572850d5d6d1f25675edd4c222447fd81ffd82e72f65a780cb826",
+  "ml/headline_metrics.py": "25e6c5a330e3729b1e4db1d36a91a72535784e11f08089403234761635c0d2a6",
+  "scripts/cgh2_agent_features.py": "fc406f09f683d21666016ac138f9753768f2ef05fecb3b90ad6d071d8e1a69fc",
+  "scripts/cgh2_agent_meta.py": "1a3788f01541d628bd6202505cd35afab33bdf552af105f90c709066c158cb69",
+  "scripts/cgh2_agent_run_dev.py": "15e21f554d98a93902594a13b431bae0e007d5eb0d34891417481af013c62ac9",
+  "scripts/cgh2_agent_final.py": "dd964e00b5536d04f6dbbfde3573c555f58e28980356e9d8260ea1ae09004bda",
+  "scripts/cgh2_agent_eval.py": "15e4bd9c5d32f288f7880397182748b78e7c7888f8660000899cd5ea596563e3"
+ },
+ "dev_models": {
+  "meta_M01.pkl": "d43cdf05c6f553238332dc58d5c7013aeb4fb5fd3dccdd55c407ca4af75196e2",
+  "meta_M02.pkl": "6a88e8368e600075ab1599dae3416b9ab455e8394536fde5abc80998c49692ca",
+  "meta_M03.pkl": "13efb63d748f9ac4ee8adb19f33c9d520af8f1077e8f348795ebb2b10fae9d1c",
+  "meta_M04.pkl": "33b4d972d38b8f7e8f6fc20c7e21ab1aee3c09824aa372256dd77d26e4be5056",
+  "meta_M05.pkl": "58d4f829a5ebf089db554a0d8053cf78a45810f563ebb5f43cf7632bfd607785",
+  "meta_M06.pkl": "1c267e2b8deac7528bf31857ced0f695acface41f844fd29cb44eadd29be422a"
+ },
+ "dev_thresholds": {
+  "M01": {
+   "watch": 0.9352859314341043,
+   "alert": 0.9714063331511473,
+   "alert_4wk": 0.9975048192630008
+  },
+  "M02": {
+   "watch": 0.9572418646420168,
+   "alert": 0.9758421919579026,
+   "alert_4wk": 0.9988776745194324
+  },
+  "M03": {
+   "watch": 0.9317569206068878,
+   "alert": 0.9693625066282039,
+   "alert_4wk": 0.9975029044622715
+  },
+  "M04": {
+   "watch": 0.940491348118012,
+   "alert": 0.9753635994710446,
+   "alert_4wk": 0.9976914116110492
+  },
+  "M05": {
+   "watch": 0.9496545071719351,
+   "alert": 0.9663557247114416,
+   "alert_4wk": 0.9987305899442618
+  },
+  "M06": {
+   "watch": 0.9091058980354721,
+   "alert": 0.9544795712233584,
+   "alert_4wk": 0.9967971502649259
+  }
+ },
+ "frozen_utc": "2026-10-08T07:56:12Z",
+ "note": "Dev-only configuration frozen before the unseen / OOD one-shot evaluation. Unseen and OOD data had not been scored by the agent at this point."
+}

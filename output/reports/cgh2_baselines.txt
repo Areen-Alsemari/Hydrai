@@ -1,0 +1,218 @@
+CGH2 CLASSICAL BASELINES vs STATIC ALARMS   [reference configuration, not a verified Saudi system; pressure class medium]
+PROVISIONAL: static-alarm limits are PAH 1.02 x MOP, PAHH 1.05 x MOP (Addendum 1), gas temperature 85/100 C (JUDGE) and hydrogen 25/50 %LFL (INL); no real Saudi alarm settings are public
+
+Thresholds from healthy units only (normal episodes + commissioning runs of the training modules; the dark-vessel stress runs are excluded).
+ROC = |2 h rate of change| of pressure and gas temperature; EWMA / CUSUM on residuals of temperature-compensated pressure and of gas temperature
+(regressed on shell temperature, ambient and compressor status); INV = CUSUM of the temperature-compensated inventory slope during hold windows.
+Channels with NO static alarm: outer_wall_temp_c, mass_flow_fill_kg_s, mass_flow_discharge_kg_s, strain_ue, ambient_temp_c, compressor_status, inlet_valve, discharge_valve, prv_state
+
+=== dev (LOMO), false-alarm budget 1/wk ===
+  realized false alarms per week on the scored healthy exposure (normal episodes + pre-onset time):
+      static  0.000/wk = 0.0000 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (0 events / 159.4 wk); alarms starting inside a data fault: 0
+      roc     0.872/wk = 0.0054 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (139 events / 159.4 wk); alarms starting inside a data fault: 5
+      ewma    1.004/wk = 0.0066 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (160 events / 159.4 wk); alarms starting inside a data fault: 16
+      cusum   0.828/wk = 0.0055 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (132 events / 159.4 wk); alarms starting inside a data fault: 15
+      inv     0.232/wk = 0.0019 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (37 events / 159.4 wk); alarms starting inside a data fault: 14
+  class  1 sensor_fault
+      static  n=12  detected  12/12  ( 100%)  median delay    0.3 h   (reference)
+      roc     n=12  detected  12/12  ( 100%)  median delay   35.3 h   lead vs static  -34.5 h (n=12), fired where static never did: 0
+      ewma    n=12  detected  12/12  ( 100%)  median delay    4.3 h   lead vs static   -4.0 h (n=12), fired where static never did: 0
+      cusum   n=12  detected  12/12  ( 100%)  median delay    4.5 h   lead vs static   -4.2 h (n=12), fired where static never did: 0
+      inv     n=12  detected  12/12  ( 100%)  median delay    5.4 h   lead vs static   -5.0 h (n=12), fired where static never did: 0
+  class  2 thermal_anomaly
+      static  n=24  detected   6/24  (  25%)  median delay   47.4 h   (reference)
+      roc     n=24  detected  21/24  (  88%)  median delay   18.0 h   lead vs static    0.1 h (n=6), fired where static never did: 15
+      ewma    n=24  detected  22/24  (  92%)  median delay   28.9 h   lead vs static   14.6 h (n=6), fired where static never did: 16
+      cusum   n=24  detected  22/24  (  92%)  median delay   20.6 h   lead vs static   11.3 h (n=5), fired where static never did: 17
+      inv     n=24  detected   5/24  (  21%)  median delay   63.4 h   lead vs static  -50.9 h (n=2), fired where static never did: 3
+  class  3 small_slow_leak
+      static  n=36  detected   6/36  (  17%)  median delay    0.0 h   (reference)
+      roc     n=36  detected  22/36  (  61%)  median delay  106.7 h   lead vs static   -1.1 h (n=1), fired where static never did: 21
+      ewma    n=36  detected  27/36  (  75%)  median delay   76.7 h   lead vs static   -1.6 h (n=5), fired where static never did: 22
+      cusum   n=36  detected  20/36  (  56%)  median delay   75.3 h   lead vs static   -3.0 h (n=4), fired where static never did: 16
+      inv     n=36  detected  19/36  (  53%)  median delay   11.1 h   lead vs static   -0.6 h (n=2), fired where static never did: 17
+  class  4 abnormal_pressure_behaviour
+      static  n=24  detected  18/24  (  75%)  median delay   12.4 h   (reference)
+      roc     n=24  detected  14/24  (  58%)  median delay   19.7 h   lead vs static   -0.2 h (n=10), fired where static never did: 4
+      ewma    n=24  detected  24/24  ( 100%)  median delay   19.5 h   lead vs static   -0.6 h (n=18), fired where static never did: 6
+      cusum   n=24  detected  22/24  (  92%)  median delay   20.2 h   lead vs static   -0.8 h (n=17), fired where static never did: 5
+      inv     n=24  detected   0/24  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  5 containment_anomaly
+      static  n=20  detected  20/20  ( 100%)  median delay    0.0 h   (reference)
+      roc     n=20  detected  17/20  (  85%)  median delay    0.3 h   lead vs static   -0.3 h (n=17), fired where static never did: 0
+      ewma    n=20  detected  17/20  (  85%)  median delay    0.2 h   lead vs static   -0.2 h (n=17), fired where static never did: 0
+      cusum   n=20  detected  16/20  (  80%)  median delay    0.4 h   lead vs static   -0.3 h (n=16), fired where static never did: 0
+      inv     n=20  detected   0/20  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  6 structural_concern
+      static  n=12  no alarm defined (not 'missed')
+      roc     n=12  detected   8/12  (  67%)  median delay   71.2 h   lead vs static      - h (n=0), fired where static never did: 8
+      ewma    n=12  detected   9/12  (  75%)  median delay   75.3 h   lead vs static      - h (n=0), fired where static never did: 9
+      cusum   n=12  detected   8/12  (  67%)  median delay   22.1 h   lead vs static      - h (n=0), fired where static never did: 8
+      inv     n=12  detected   5/12  (  42%)  median delay   97.8 h   lead vs static      - h (n=0), fired where static never did: 5
+  class -1 unknown_anomaly
+      static  n=24  detected   6/24  (  25%)  median delay    0.0 h   (reference)
+      roc     n=24  detected  19/24  (  79%)  median delay   37.2 h   lead vs static   -0.9 h (n=5), fired where static never did: 14
+      ewma    n=24  detected  21/24  (  88%)  median delay   18.7 h   lead vs static   -0.6 h (n=6), fired where static never did: 15
+      cusum   n=24  detected  18/24  (  75%)  median delay   12.6 h   lead vs static   -1.2 h (n=6), fired where static never did: 12
+      inv     n=24  detected  16/24  (  67%)  median delay    6.7 h   lead vs static      - h (n=0), fired where static never did: 16
+
+=== dev (LOMO), false-alarm budget 1/4wk ===
+  realized false alarms per week on the scored healthy exposure (normal episodes + pre-onset time):
+      static  0.000/wk = 0.0000 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (0 events / 159.4 wk); alarms starting inside a data fault: 0
+      roc     0.251/wk = 0.0016 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (40 events / 159.4 wk); alarms starting inside a data fault: 2
+      ewma    0.263/wk = 0.0019 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (42 events / 159.4 wk); alarms starting inside a data fault: 8
+      cusum   0.389/wk = 0.0026 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (62 events / 159.4 wk); alarms starting inside a data fault: 8
+      inv     0.232/wk = 0.0018 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (37 events / 159.4 wk); alarms starting inside a data fault: 12
+  class  1 sensor_fault
+      static  n=12  detected  12/12  ( 100%)  median delay    0.3 h   (reference)
+      roc     n=12  detected  10/12  (  83%)  median delay   67.5 h   lead vs static  -66.5 h (n=10), fired where static never did: 0
+      ewma    n=12  detected  12/12  ( 100%)  median delay    6.2 h   lead vs static   -6.0 h (n=12), fired where static never did: 0
+      cusum   n=12  detected  12/12  ( 100%)  median delay    5.6 h   lead vs static   -5.3 h (n=12), fired where static never did: 0
+      inv     n=12  detected  12/12  ( 100%)  median delay    6.3 h   lead vs static   -6.0 h (n=12), fired where static never did: 0
+  class  2 thermal_anomaly
+      static  n=24  detected   6/24  (  25%)  median delay   47.4 h   (reference)
+      roc     n=24  detected  17/24  (  71%)  median delay   67.6 h   lead vs static    0.5 h (n=5), fired where static never did: 12
+      ewma    n=24  detected  19/24  (  79%)  median delay   76.8 h   lead vs static  -71.5 h (n=5), fired where static never did: 14
+      cusum   n=24  detected  23/24  (  96%)  median delay   27.0 h   lead vs static   32.0 h (n=6), fired where static never did: 17
+      inv     n=24  detected   4/24  (  17%)  median delay   41.9 h   lead vs static   10.9 h (n=1), fired where static never did: 3
+  class  3 small_slow_leak
+      static  n=36  detected   6/36  (  17%)  median delay    0.0 h   (reference)
+      roc     n=36  detected  14/36  (  39%)  median delay  113.7 h   lead vs static   -1.4 h (n=1), fired where static never did: 13
+      ewma    n=36  detected  13/36  (  36%)  median delay  100.4 h   lead vs static   -2.6 h (n=4), fired where static never did: 9
+      cusum   n=36  detected  17/36  (  47%)  median delay   68.5 h   lead vs static   -4.4 h (n=4), fired where static never did: 13
+      inv     n=36  detected  16/36  (  44%)  median delay   12.7 h   lead vs static      - h (n=0), fired where static never did: 16
+  class  4 abnormal_pressure_behaviour
+      static  n=24  detected  18/24  (  75%)  median delay   12.4 h   (reference)
+      roc     n=24  detected   8/24  (  33%)  median delay    0.7 h   lead vs static   -0.1 h (n=6), fired where static never did: 2
+      ewma    n=24  detected  22/24  (  92%)  median delay   19.3 h   lead vs static   -1.1 h (n=18), fired where static never did: 4
+      cusum   n=24  detected  22/24  (  92%)  median delay   20.9 h   lead vs static   -1.3 h (n=17), fired where static never did: 5
+      inv     n=24  detected   0/24  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  5 containment_anomaly
+      static  n=20  detected  20/20  ( 100%)  median delay    0.0 h   (reference)
+      roc     n=20  detected  17/20  (  85%)  median delay    0.4 h   lead vs static   -0.3 h (n=17), fired where static never did: 0
+      ewma    n=20  detected  17/20  (  85%)  median delay    0.3 h   lead vs static   -0.3 h (n=17), fired where static never did: 0
+      cusum   n=20  detected  17/20  (  85%)  median delay    0.5 h   lead vs static   -0.4 h (n=17), fired where static never did: 0
+      inv     n=20  detected   0/20  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  6 structural_concern
+      static  n=12  no alarm defined (not 'missed')
+      roc     n=12  detected   2/12  (  17%)  median delay  179.9 h   lead vs static      - h (n=0), fired where static never did: 2
+      ewma    n=12  detected   0/12  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+      cusum   n=12  detected   5/12  (  42%)  median delay   56.1 h   lead vs static      - h (n=0), fired where static never did: 5
+      inv     n=12  detected   5/12  (  42%)  median delay   97.9 h   lead vs static      - h (n=0), fired where static never did: 5
+  class -1 unknown_anomaly
+      static  n=24  detected   6/24  (  25%)  median delay    0.0 h   (reference)
+      roc     n=24  detected  13/24  (  54%)  median delay   18.4 h   lead vs static   -1.0 h (n=6), fired where static never did: 7
+      ewma    n=24  detected  15/24  (  62%)  median delay   70.0 h   lead vs static   -0.9 h (n=6), fired where static never did: 9
+      cusum   n=24  detected  15/24  (  62%)  median delay    9.9 h   lead vs static   -1.5 h (n=6), fired where static never did: 9
+      inv     n=24  detected  16/24  (  67%)  median delay    6.7 h   lead vs static      - h (n=0), fired where static never did: 16
+
+=== unseen, false-alarm budget 1/wk ===
+  realized false alarms per week on the scored healthy exposure (normal episodes + pre-onset time):
+      static  0.000/wk = 0.0000 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (0 events / 78.9 wk); alarms starting inside a data fault: 0
+      roc     0.481/wk = 0.0032 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (38 events / 78.9 wk); alarms starting inside a data fault: 4
+      ewma    0.849/wk = 0.0059 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (67 events / 78.9 wk); alarms starting inside a data fault: 11
+      cusum   0.608/wk = 0.0043 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (48 events / 78.9 wk); alarms starting inside a data fault: 9
+      inv     0.253/wk = 0.0022 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (20 events / 78.9 wk); alarms starting inside a data fault: 9
+  class  1 sensor_fault
+      static  n=6   detected   6/6   ( 100%)  median delay    0.5 h   (reference)
+      roc     n=6   detected   6/6   ( 100%)  median delay   69.4 h   lead vs static  -68.7 h (n=6), fired where static never did: 0
+      ewma    n=6   detected   6/6   ( 100%)  median delay    3.7 h   lead vs static   -3.4 h (n=6), fired where static never did: 0
+      cusum   n=6   detected   6/6   ( 100%)  median delay    4.6 h   lead vs static   -4.5 h (n=6), fired where static never did: 0
+      inv     n=6   detected   6/6   ( 100%)  median delay    3.5 h   lead vs static   -3.2 h (n=6), fired where static never did: 0
+  class  2 thermal_anomaly
+      static  n=12  detected   3/12  (  25%)  median delay   29.8 h   (reference)
+      roc     n=12  detected  10/12  (  83%)  median delay   37.5 h   lead vs static   56.1 h (n=2), fired where static never did: 8
+      ewma    n=12  detected  12/12  ( 100%)  median delay   32.2 h   lead vs static   -2.8 h (n=4), fired where static never did: 8
+      cusum   n=12  detected  11/12  (  92%)  median delay   19.7 h   lead vs static   27.5 h (n=4), fired where static never did: 7
+      inv     n=12  detected   2/12  (  17%)  median delay   83.5 h   lead vs static   21.9 h (n=2), fired where static never did: 0
+  class  3 small_slow_leak
+      static  n=18  detected   3/18  (  17%)  median delay    0.0 h   (reference)
+      roc     n=18  detected   7/18  (  39%)  median delay  104.3 h   lead vs static      - h (n=0), fired where static never did: 7
+      ewma    n=18  detected  11/18  (  61%)  median delay   60.8 h   lead vs static   -1.5 h (n=3), fired where static never did: 8
+      cusum   n=18  detected   9/18  (  50%)  median delay   38.4 h   lead vs static   -2.4 h (n=3), fired where static never did: 6
+      inv     n=18  detected  10/18  (  56%)  median delay   17.4 h   lead vs static      - h (n=0), fired where static never did: 10
+  class  4 abnormal_pressure_behaviour
+      static  n=12  detected   9/12  (  75%)  median delay    2.0 h   (reference)
+      roc     n=12  detected   7/12  (  58%)  median delay    4.1 h   lead vs static   -0.1 h (n=5), fired where static never did: 2
+      ewma    n=12  detected  12/12  ( 100%)  median delay    4.6 h   lead vs static   -0.3 h (n=9), fired where static never did: 3
+      cusum   n=12  detected  11/12  (  92%)  median delay    6.6 h   lead vs static   -1.5 h (n=9), fired where static never did: 2
+      inv     n=12  detected   3/12  (  25%)  median delay   60.6 h   lead vs static  -59.9 h (n=3), fired where static never did: 0
+  class  5 containment_anomaly
+      static  n=10  detected  10/10  ( 100%)  median delay    0.0 h   (reference)
+      roc     n=10  detected   8/10  (  80%)  median delay    0.4 h   lead vs static   -0.3 h (n=8), fired where static never did: 0
+      ewma    n=10  detected   9/10  (  90%)  median delay    0.3 h   lead vs static   -0.2 h (n=9), fired where static never did: 0
+      cusum   n=10  detected   8/10  (  80%)  median delay    0.4 h   lead vs static   -0.4 h (n=8), fired where static never did: 0
+      inv     n=10  detected   0/10  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  6 structural_concern
+      static  n=6   no alarm defined (not 'missed')
+      roc     n=6   detected   4/6   (  67%)  median delay   47.4 h   lead vs static      - h (n=0), fired where static never did: 4
+      ewma    n=6   detected   4/6   (  67%)  median delay   46.7 h   lead vs static      - h (n=0), fired where static never did: 4
+      cusum   n=6   detected   4/6   (  67%)  median delay   61.9 h   lead vs static      - h (n=0), fired where static never did: 4
+      inv     n=6   detected   2/6   (  33%)  median delay   59.1 h   lead vs static      - h (n=0), fired where static never did: 2
+  class -1 unknown_anomaly
+      static  n=12  detected   3/12  (  25%)  median delay    0.0 h   (reference)
+      roc     n=12  detected  11/12  (  92%)  median delay    9.5 h   lead vs static   -0.8 h (n=3), fired where static never did: 8
+      ewma    n=12  detected  11/12  (  92%)  median delay   21.3 h   lead vs static   -0.6 h (n=3), fired where static never did: 8
+      cusum   n=12  detected   9/12  (  75%)  median delay   21.5 h   lead vs static   -1.2 h (n=3), fired where static never did: 6
+      inv     n=12  detected   5/12  (  42%)  median delay    4.2 h   lead vs static      - h (n=0), fired where static never did: 5
+
+=== unseen, false-alarm budget 1/4wk ===
+  realized false alarms per week on the scored healthy exposure (normal episodes + pre-onset time):
+      static  0.000/wk = 0.0000 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (0 events / 78.9 wk); alarms starting inside a data fault: 0
+      roc     0.177/wk = 0.0011 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (14 events / 78.9 wk); alarms starting inside a data fault: 0
+      ewma    0.279/wk = 0.0021 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (22 events / 78.9 wk); alarms starting inside a data fault: 6
+      cusum   0.317/wk = 0.0022 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (25 events / 78.9 wk); alarms starting inside a data fault: 4
+      inv     0.228/wk = 0.0021 per hour (within target vs ~1/h target; EEMUA 6/h manageable); (18 events / 78.9 wk); alarms starting inside a data fault: 10
+  class  1 sensor_fault
+      static  n=6   detected   6/6   ( 100%)  median delay    0.5 h   (reference)
+      roc     n=6   detected   6/6   ( 100%)  median delay   93.2 h   lead vs static  -92.5 h (n=6), fired where static never did: 0
+      ewma    n=6   detected   6/6   ( 100%)  median delay    9.1 h   lead vs static   -8.5 h (n=6), fired where static never did: 0
+      cusum   n=6   detected   6/6   ( 100%)  median delay    7.3 h   lead vs static   -6.8 h (n=6), fired where static never did: 0
+      inv     n=6   detected   6/6   ( 100%)  median delay    3.6 h   lead vs static   -3.3 h (n=6), fired where static never did: 0
+  class  2 thermal_anomaly
+      static  n=12  detected   3/12  (  25%)  median delay   29.8 h   (reference)
+      roc     n=12  detected   4/12  (  33%)  median delay   40.2 h   lead vs static    1.6 h (n=1), fired where static never did: 3
+      ewma    n=12  detected  10/12  (  83%)  median delay   35.0 h   lead vs static    1.8 h (n=3), fired where static never did: 7
+      cusum   n=12  detected  11/12  (  92%)  median delay   29.5 h   lead vs static   24.0 h (n=4), fired where static never did: 7
+      inv     n=12  detected   1/12  (   8%)  median delay  160.9 h   lead vs static -149.2 h (n=1), fired where static never did: 0
+  class  3 small_slow_leak
+      static  n=18  detected   3/18  (  17%)  median delay    0.0 h   (reference)
+      roc     n=18  detected   4/18  (  22%)  median delay  111.4 h   lead vs static      - h (n=0), fired where static never did: 4
+      ewma    n=18  detected   9/18  (  50%)  median delay  104.4 h   lead vs static   -2.5 h (n=3), fired where static never did: 6
+      cusum   n=18  detected   6/18  (  33%)  median delay   30.8 h   lead vs static   -3.8 h (n=3), fired where static never did: 3
+      inv     n=18  detected  10/18  (  56%)  median delay   17.6 h   lead vs static      - h (n=0), fired where static never did: 10
+  class  4 abnormal_pressure_behaviour
+      static  n=12  detected   9/12  (  75%)  median delay    2.0 h   (reference)
+      roc     n=12  detected   5/12  (  42%)  median delay    0.7 h   lead vs static   -0.1 h (n=4), fired where static never did: 1
+      ewma    n=12  detected  10/12  (  83%)  median delay    3.9 h   lead vs static   -0.8 h (n=9), fired where static never did: 1
+      cusum   n=12  detected  11/12  (  92%)  median delay    7.0 h   lead vs static   -2.1 h (n=9), fired where static never did: 2
+      inv     n=12  detected   1/12  (   8%)  median delay   32.9 h   lead vs static  -32.3 h (n=1), fired where static never did: 0
+  class  5 containment_anomaly
+      static  n=10  detected  10/10  ( 100%)  median delay    0.0 h   (reference)
+      roc     n=10  detected   8/10  (  80%)  median delay    0.4 h   lead vs static   -0.4 h (n=8), fired where static never did: 0
+      ewma    n=10  detected   9/10  (  90%)  median delay    0.3 h   lead vs static   -0.3 h (n=9), fired where static never did: 0
+      cusum   n=10  detected   9/10  (  90%)  median delay    0.5 h   lead vs static   -0.5 h (n=9), fired where static never did: 0
+      inv     n=10  detected   0/10  (   0%)  median delay      - h   lead vs static      - h (n=0), fired where static never did: 0
+  class  6 structural_concern
+      static  n=6   no alarm defined (not 'missed')
+      roc     n=6   detected   2/6   (  33%)  median delay   44.5 h   lead vs static      - h (n=0), fired where static never did: 2
+      ewma    n=6   detected   2/6   (  33%)  median delay   86.1 h   lead vs static      - h (n=0), fired where static never did: 2
+      cusum   n=6   detected   3/6   (  50%)  median delay  106.0 h   lead vs static      - h (n=0), fired where static never did: 3
+      inv     n=6   detected   1/6   (  17%)  median delay   24.1 h   lead vs static      - h (n=0), fired where static never did: 1
+  class -1 unknown_anomaly
+      static  n=12  detected   3/12  (  25%)  median delay    0.0 h   (reference)
+      roc     n=12  detected   9/12  (  75%)  median delay   25.9 h   lead vs static   -0.8 h (n=3), fired where static never did: 6
+      ewma    n=12  detected   9/12  (  75%)  median delay   57.1 h   lead vs static   -0.9 h (n=3), fired where static never did: 6
+      cusum   n=12  detected   8/12  (  67%)  median delay   58.2 h   lead vs static   -1.5 h (n=3), fired where static never did: 5
+      inv     n=12  detected   5/12  (  42%)  median delay    4.2 h   lead vs static      - h (n=0), fired where static never did: 5
+
+static-alarm note per fault class:
+   class  1 sensor_fault                   gas temperature spike: TAH 85 C exists; only a large spike crosses it
+   class  2 thermal_anomaly                gas temperature / pressure: TAH, PAH exist; a moderate thermal anomaly stays below them
+   class  3 small_slow_leak                NO alarm on its primary signature (pressure fall, inventory): there is no low-pressure or inventory alarm; the H2 alarm (25 %LFL) exists and picks up >= ~1 mm only
+   class  4 abnormal_pressure_behaviour    pressure high: PAH / PAHH exist (overrun, blocked relief, fire); the stuck-open discharge valve shows only on the flow meter and inventory: no alarm defined
+   class  5 containment_anomaly            H2 detector alarm 25 / 50 %LFL exists
+   class  6 structural_concern             strain: NO static alarm defined
+   class -1 unknown_anomaly                variable
+
+PROVISIONAL: static-alarm limits are PAH 1.02 x MOP, PAHH 1.05 x MOP (Addendum 1), gas temperature 85/100 C (JUDGE) and hydrogen 25/50 %LFL (INL); no real Saudi alarm settings are public

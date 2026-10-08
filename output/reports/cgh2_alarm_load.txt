@@ -1,0 +1,14 @@
+dashboard: reference configuration, not a verified Saudi system (class medium)
+PROVISIONAL: static-alarm limits are PAH 1.02 x MOP, PAHH 1.05 x MOP (Addendum 1), gas temperature 85/100 C (JUDGE) and hydrogen 25/50 %LFL (INL); no real Saudi alarm settings are public
+
+ISA-18.2 / EEMUA 191: 6/h manageable, 12/h busy ceiling; agent target about 1 alert/h of healthy operation
+
+scenario class                 level  events  healthy hours  per hour   vs ISA-18.2 / EEMUA 191
+standard                         any       0        40042.9    0.0000   manageable
+standard                     warning       0        40042.9    0.0000   manageable
+standard                    critical       0        40042.9    0.0000   manageable
+
+NOTE: a zero or near-zero static-alarm load here is a simulator artifact (no trips, mode changes, comms flaps, maintenance or operator action).
+Agent alert rate: not reported (no agent trained on this dataset yet); target about 1 alert/h.
+
+PROVISIONAL: static-alarm limits are PAH 1.02 x MOP, PAHH 1.05 x MOP (Addendum 1), gas temperature 85/100 C (JUDGE) and hydrogen 25/50 %LFL (INL); no real Saudi alarm settings are public

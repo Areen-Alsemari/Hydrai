@@ -1,0 +1,6 @@
+2000 healthy units x 14 days; alarm 25 %LFL, trip 50 %LFL (INL), 1-sample, no persistence
+
+mode                          unit   alarm  noise sd bias bound worst reading units alarming alarm /unit-wk units tripping trip /unit-wk
+lfl (realistic default)       %LFL   25.00     0.224       2.50          6.41              0         0.0000              0        0.0000
+spec, generic split           %vol    1.00     0.089       1.00          1.93            735       131.7018              0        0.0000
+spec + zero-ref workaround    %vol    1.00     0.089       0.20          0.81              0         0.0000              0        0.0000

@@ -1,0 +1,6 @@
+2000 healthy units x 14 days; alarm limits H = 20 %LFL, HH = 40 %LFL (UNVERIFIED), 1-sample, no persistence
+
+mode                            unit  H limit  noise sd bias bound worst reading units w/ H H /unit-wk units w/ HH HH /unit-wk
+lfl (realistic default)         %LFL    20.00     0.224       2.50          6.41          0     0.0000           0      0.0000
+spec + zero-ref workaround      %vol     0.80     0.089       0.20          0.87          1     0.0003           0      0.0000
+spec + generic split            %vol     0.80     0.089       1.00          1.95        989   209.5200         174      5.3135

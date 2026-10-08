@@ -1,0 +1,20 @@
+
+pressure_bar_a   (legacy white sigma 0.75 kPa; split: noise sigma 0.15, drift bound 0.45, bias bound 0.75 kPa)
+window            legacy slope noise  split slope noise  white-only  resolvable @3 sigma   drift 0.073 kPa/h: in sigma (target)   drift 0.241 kPa/h: in sigma (baseline)
+2 min @ 1 s                  7.115/h            1.433/h     1.423/h              4.298/h                             0.05                             0.17
+10 min @ 1 s                0.6364/h           0.1629/h    0.1273/h             0.4886/h                             0.45                             1.48
+30 min @ 60 s               0.9492/h           0.1988/h    0.1898/h             0.5964/h                             0.37                             1.21
+1 h @ 60 s                  0.3355/h          0.07935/h   0.06709/h              0.238/h                             0.92                             3.04
+2 h @ 60 s                  0.1186/h          0.03634/h   0.02372/h              0.109/h                             2.01                             6.63
+6 h @ 60 s                 0.02282/h          0.01646/h  0.004564/h            0.04938/h                             4.44                            14.64
+24 h @ 60 s               0.002853/h         0.007344/h 0.0005705/h            0.02203/h                             9.94                            32.81
+
+liquid_temp_c   (legacy white sigma 0.25 K; split: noise sigma 0.05, drift bound 0.15, bias bound 0.25 K)
+window            legacy slope noise  split slope noise  white-only  resolvable @3 sigma   drift 0.003942 K/h: in sigma (target)   drift 0.013014 K/h: in sigma (baseline)
+2 min @ 1 s                  2.372/h           0.4903/h    0.4744/h              1.471/h                             0.01                             0.03
+10 min @ 1 s                0.2121/h          0.05375/h   0.04243/h             0.1613/h                             0.07                             0.24
+30 min @ 60 s               0.3164/h          0.06529/h   0.06328/h             0.1959/h                             0.06                             0.20
+1 h @ 60 s                  0.1118/h          0.02583/h   0.02236/h            0.07749/h                             0.15                             0.50
+2 h @ 60 s                 0.03953/h          0.01228/h  0.007906/h            0.03684/h                             0.32                             1.06
+6 h @ 60 s                0.007607/h         0.005667/h  0.001521/h              0.017/h                             0.70                             2.30
+24 h @ 60 s              0.0009509/h         0.002542/h 0.0001902/h           0.007626/h                             1.55                             5.12

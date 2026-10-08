@@ -1,0 +1,16 @@
+dashboard: reference configuration, not a verified Saudi system
+PROVISIONAL: static-alarm limits are the workbook's 'simulation threshold' values (Sec. 5/6; hydrogen 20/40 %LFL unverified), not the plant's real alarm settings
+
+EEMUA 191: 6/h manageable, 12/h busy ceiling; agent target ~1/h
+
+scenario class                 level  events  healthy hours  per hour   vs EEMUA 191
+standard                         any       0        33066.9    0.0000   manageable
+standard                     warning       0        33066.9    0.0000   manageable
+standard                    critical       0        33066.9    0.0000   manageable
+overfill_hydraulic_lock          any       0         3878.9    0.0000   manageable
+overfill_hydraulic_lock      warning       0         3878.9    0.0000   manageable
+overfill_hydraulic_lock     critical       0         3878.9    0.0000   manageable
+
+Agent alert rate: not reported (no agent trained on this dataset yet); target about 1 alert/h of healthy operation.
+
+PROVISIONAL: static-alarm limits are the workbook's 'simulation threshold' values (Sec. 5/6; hydrogen 20/40 %LFL unverified), not the plant's real alarm settings
