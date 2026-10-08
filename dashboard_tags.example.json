@@ -1,0 +1,16 @@
+{
+  "level": "user_supplied",
+  "note": "EXAMPLE FORMAT ONLY. Replace with the plant dashboard's real tag list, historian rates and alarm limits. Channels not listed here are hidden from models.",
+  "tags": [
+    {"name": "TK01.PT-101", "channel": "pressure_bar_a", "period_s": 60},
+    {"name": "TK01.TT-102", "channel": "liquid_temp_c", "period_s": 60},
+    {"name": "TK01.LT-103", "channel": "liquid_level_pct", "period_s": 60},
+    {"name": "TK01.PT-104", "channel": "vacuum_pressure_pa", "period_s": 600}
+  ],
+  "alarms": [
+    {"channel": "pressure_bar_a", "direction": "high", "limit": 2.0, "level": "warning", "on_delay_samples": 1},
+    {"channel": "pressure_bar_a", "direction": "high", "limit": 3.0, "level": "critical", "on_delay_samples": 1},
+    {"channel": "pressure_bar_a", "direction": "low", "limit": 0.8, "level": "warning", "on_delay_samples": 1},
+    {"channel": "liquid_level_pct", "direction": "high", "limit": 90.0, "level": "warning", "on_delay_samples": 1}
+  ]
+}

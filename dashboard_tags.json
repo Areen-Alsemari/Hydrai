@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "name": "HYDRAI LH2 reference dashboard configuration",
+    "status": "REFERENCE - not a verified Saudi system",
+    "dcs_context": "Yokogawa CENTUM / Honeywell Experion with PI-style historian (read-only side channel, NAMUR NOA style)",
+    "generator_grid_s": 1
+  },
+  "historian_defaults": {
+    "raw_sample_s": 1,
+    "exception_deadband_pct_span": [0.1, 0.5],
+    "exception_forced_point_s": 600,
+    "compression": "swinging_door",
+    "compression_forced_point_s": 28800,
+    "opc_quality": ["Good", "Uncertain", "Bad"],
+    "injected_faults": ["stale_value", "flat_line", "out_of_range", "dropout"],
+    "source": "STD"
+  },
+  "tags": [
+    {"tag": "LH2-PT-101", "channel": "ullage_pressure", "unit": "bar_a", "range": [0, 6], "sample_period_s": 1, "accuracy": "0.25% FS", "source": "SPEC",
+     "alarms": {"PAH": "from spec Sec. pressure envelope (label: simulation threshold)", "PAHH": "from spec, tied to PRV set pressure"}},
+    {"tag": "LH2-TT-101", "channel": "liquid_temp_inner", "unit": "K", "accuracy": "+-0.5 C", "sample_period_s": 1, "source": "SPEC"},
+    {"tag": "LH2-TT-102", "channel": "outer_wall_temp", "unit": "K", "accuracy": "+-0.5 C", "sample_period_s": 5, "source": "SPEC"},
+    {"tag": "LH2-AT-101", "channel": "h2_ambient_detector", "unit": "%LFL", "range": [0, 100], "sample_period_s": 0.2, "response_s": [10, 15],
+     "accuracy_default": "+-5 %LFL (realistic)", "accuracy_spec_mode": "2 %vol (spec)", "source": "UNV",
+     "alarms": {"H": 20, "HH": 40, "alternates_seen": ["10/25", "25/50"], "note": "setpoints unverified; Aramco SAES not public"}},
+    {"tag": "LH2-LT-101", "channel": "level", "unit": "%", "range": [0, 100], "sample_period_s": 1, "accuracy": "0.5% FS", "technique": "DP gauge", "source": "SPEC"},
+    {"tag": "LH2-FT-101", "channel": "fill_flow", "unit": "kg/s", "sample_period_s": 0.1, "accuracy": "1% FS", "source": "SPEC"},
+    {"tag": "LH2-FT-102", "channel": "discharge_flow", "unit": "kg/s", "sample_period_s": 0.1, "accuracy": "1% FS", "source": "SPEC"},
+    {"tag": "LH2-SE-101", "channel": "strain", "unit": "microstrain", "sample_period_s": 0.1, "accuracy": "1% FS", "source": "SPEC"},
+    {"tag": "LH2-PT-201", "channel": "vacuum_jacket", "unit": "Pa", "sample_period_s": 10, "gauge": "Pirani/thermocouple, log scale",
+     "accuracy_default": "+-20% of reading (mid range) plus floor", "accuracy_spec_mode": "1% FS (10 Pa)", "source": "UNV",
+     "note": "a 1% FS linear gauge cannot read 0.1 Pa; Q6 stays open"},
+    {"tag": "LH2-TT-901", "channel": "ambient_temp", "unit": "C", "sample_period_s": 10, "accuracy": "+-0.3 C", "source": "SPEC"},
+    {"tag": "LH2-XS-101..", "channel": "valve_states", "type": "discrete_input", "values": ["open", "closed", "unknown"],
+     "note": "often not available to a historian side channel; model as optional and flag", "source": "STD"}
+  ],
+  "alarm_load": {
+    "operator_norm": "EEMUA 191 / ISA-18.2: about 6 per hour average is manageable; 12 per hour is the busy ceiling",
+    "agent_target": "no more than about 1 agent alert per hour of healthy operation",
+    "source": "STD"
+  }
+}

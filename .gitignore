@@ -11,3 +11,21 @@ __pycache__/
 # useful for reviewing what a run produced without regenerating it.
 output/*.json
 output/dataset/*.jsonl
+output/dataset_final/*.jsonl
+output/ml/
+
+# Physical-model generated data (regenerate with scripts/generate_physical_sample.py);
+# only samples/physical/ is committed.
+output/physical/
+output/physical_stratified/
+output/physical_dataset/
+output/physical_dataset_fast/
+output/physical_dataset_stratified/
+
+# CGH2 generated episode data and agent caches: large and reproducible (scripts/cgh2_generate.py, scripts/cgh2_drift_generate.py, scripts/cgh2_agent_features.py,
+# scripts/cgh2_agent_meta.py, ...). The manifests (small) stay committed; the committed samples live in samples/cgh2/.
+output/cgh2/**/*.parquet
+output/cgh2/**/*.jsonl.gz
+output/cgh2_drift/**/*.parquet
+output/cgh2_drift/**/*.jsonl.gz
+output/cgh2_cache/

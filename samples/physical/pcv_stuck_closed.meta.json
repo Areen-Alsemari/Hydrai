@@ -1,0 +1,485 @@
+{
+  "episode_id": "PEP-000000000135256a",
+  "seed": 20260202,
+  "fault_id": 4,
+  "scenario": "abnormal_pressure_rise",
+  "variant_tag": "pcv_stuck_closed",
+  "scenario_class": "standard",
+  "module_id": "M01",
+  "fill_target_pct": 85.89226139543325,
+  "stratification": "off",
+  "onset_s": 154110.1438930359,
+  "storage_start_s": 518.0,
+  "first_observable_s": null,
+  "first_observable_clear_s": null,
+  "onset_to_first_observable_s": null,
+  "per_channel_deviation_s": {
+    "pressure_bar_a": {
+      "k3": null,
+      "k10": null
+    },
+    "liquid_temp_c": {
+      "k3": null,
+      "k10": null
+    },
+    "inner_wall_temp_c": {
+      "k3": null,
+      "k10": null
+    },
+    "outer_wall_temp_c": {
+      "k3": null,
+      "k10": null
+    },
+    "h2_concentration_pct": {
+      "k3": null,
+      "k10": null
+    },
+    "liquid_level_pct": {
+      "k3": null,
+      "k10": null
+    },
+    "mass_flow_fill_kg_s": {
+      "k3": null,
+      "k10": null
+    },
+    "mass_flow_discharge_kg_s": {
+      "k3": null,
+      "k10": null
+    },
+    "strain_ue": {
+      "k3": null,
+      "k10": null
+    },
+    "vacuum_pressure_pa": {
+      "k3": null,
+      "k10": null
+    },
+    "ambient_temp_c": {
+      "k3": null,
+      "k10": null
+    }
+  },
+  "observability_definition": {
+    "basis": "noise-free ground truth vs paired healthy counterfactual, 60 s grid; sensor sigma = Sec. 9 accuracy / 2",
+    "k_sensitive": 3.0,
+    "k_clear": 10.0,
+    "n_consecutive": 5,
+    "sensor_outlier_k": 10.0,
+    "note": "ideal-observer bound; a real detector without the healthy twin will detect later"
+  },
+  "healthy_exposure_s": 154110.1438930359,
+  "time_onset_to_end_s": 365591.85610696406,
+  "duration_s": 519702.0,
+  "ended_reason": null,
+  "unknown_sub_faults": [],
+  "n_slow": 8662,
+  "n_fast": 1281,
+  "pcv_open_events": 0,
+  "prv_lift_events": 0,
+  "liquid_full_events": 0,
+  "liquid_vented_kg": 0.0,
+  "vented_kg": 0.0,
+  "leaked_kg": 0.0,
+  "mass_in_kg": 518.0,
+  "mass_liquid_out_kg": 381.0,
+  "mass_residual_kg": 0.0,
+  "placeholders_used": [
+    {
+      "name": "pcv_open_bar_a",
+      "value": 1.5,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q1",
+      "basis": "Top of the workbook Sec. 5 normal band. Workbook Sec. 17.2 instead says the PCV opens at the 2.0 bar(a) warning level; unresolved."
+    },
+    {
+      "name": "pcv_deadband_bar",
+      "value": 0.069,
+      "unit": "bar",
+      "level": "placeholder",
+      "question": "Q1",
+      "basis": "NASA MHTB vent control band, 6.9 kPa (S1). An analog for hysteresis width at this tank's scale, not this valve."
+    },
+    {
+      "name": "pcv_effective_diameter_m",
+      "value": 0.01,
+      "unit": "m",
+      "level": "placeholder",
+      "question": "Q3",
+      "basis": "Arbitrary effective vent orifice; no vent-line design basis exists."
+    },
+    {
+      "name": "pcv_cd",
+      "value": 0.62,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q3",
+      "basis": "Workbook Sec. 17.5 sharp-edged orifice default (0.62)."
+    },
+    {
+      "name": "pbr_open_bar_a",
+      "value": 1.1,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q1",
+      "basis": "Pressure-build regulator engages below this. A commercial LH2 vessel has one (reviewer-read datasheet, S25); whether this tank does is unknown. Without it, liquid discharge pulls pressure down."
+    },
+    {
+      "name": "pbr_close_bar_a",
+      "value": 1.15,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q1",
+      "basis": "Pressure-build regulator disengages above this (0.05 bar hysteresis, arbitrary)."
+    },
+    {
+      "name": "pbr_heat_w",
+      "value": 10000.0,
+      "unit": "W",
+      "level": "placeholder",
+      "question": "Q1",
+      "basis": "Vaporizer heat added to the ullage while the regulator is engaged. Arbitrary capacity, roughly what a 0.5 kg/s discharge needs."
+    },
+    {
+      "name": "prv_set_bar_a",
+      "value": 6.0,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "Set at MAWP (workbook Sec. 5); ASME VIII-1 rule via a secondary source (S7)."
+    },
+    {
+      "name": "prv_blowdown_frac",
+      "value": 0.05,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "Magnitude from 46 CFR 162.018-5 (S17): closes after blowing down not more than 5% of set."
+    },
+    {
+      "name": "prv_full_lift_overpressure_frac",
+      "value": 0.1,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "Linear lift from set to set+10%: ASME-certified valves reach rated capacity at 10% or less overpressure (S7, secondary)."
+    },
+    {
+      "name": "prv_effective_area_m2",
+      "value": 0.0002835287369864788,
+      "unit": "m^2",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "Reuses the 19 mm reference orifice of workbook Sec. 17.3. There is no relief design basis for this tank."
+    },
+    {
+      "name": "prv_cd",
+      "value": 0.975,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "API effective discharge coefficient for gas (S8, secondary); certified valves are lower."
+    },
+    {
+      "name": "prv_cd_liquid",
+      "value": 0.65,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q2",
+      "basis": "Effective liquid discharge coefficient used when the PRV must pass liquid (tank liquid-full). Not verified by me; flashing downstream is ignored."
+    },
+    {
+      "name": "first_fill_max_fraction",
+      "value": 0.75,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q9b",
+      "basis": "UNVERIFIED. Reported to me as the cap on FIRST fill of a WARM tank in Chart's LH2 manual; I have not read it. It does not apply to later fills, which go to the rated maximum (a separate unanswered question, Q9b). The workbook uses 85% nominal / 90% max modeled (Secs. 2, 8). At 85% a blocked tank goes liquid-full near 5.5-5.9 bar(a), below MAWP 6.0 (my CoolProp check)."
+    },
+    {
+      "name": "ambient_diurnal_amplitude_c",
+      "value": 5.0,
+      "unit": "C",
+      "level": "placeholder",
+      "question": "Q7",
+      "basis": "Day/night ambient swing; heat leak is scaled by a radiation law (T^4) against the cold surface. Amplitude is an assumption."
+    },
+    {
+      "name": "h2_dispersion_pct_per_kg_s",
+      "value": 50000.0,
+      "unit": "%vol per kg/s",
+      "level": "placeholder",
+      "question": "Q3",
+      "basis": "Crude leak-rate to vent-sensor concentration scaling carried over from the legacy generator. Handoff Sec. 11.6 says not to invent ppm readings; no dispersion model exists."
+    },
+    {
+      "name": "sensor_fault_spike_prob",
+      "value": 0.15,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q5",
+      "basis": "Per-sample chance of an erratic liquid-temperature reading once a sensor fault is active (carried over from the legacy generator)."
+    },
+    {
+      "name": "strain_scf_max",
+      "value": 4.0,
+      "unit": "-",
+      "level": "placeholder",
+      "question": "Q5",
+      "basis": "Stress-concentration factor at full structural-concern severity (carried over from the legacy generator; not a structural model)."
+    },
+    {
+      "name": "ambient_bar_a",
+      "value": 1.01325,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q3",
+      "basis": "Standard atmosphere; vent discharges to atmosphere (assumed; Q3 asks whether a recovery header exists)."
+    },
+    {
+      "name": "sensor_bias_frac",
+      "value": 0.5,
+      "unit": "x accuracy",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Per-unit calibration bias is bounded by this fraction of the Sec. 9 accuracy (uniform +/-). 0.5 was the module-profile value already in use; no datasheet split exists."
+    },
+    {
+      "name": "sensor_drift_frac",
+      "value": 0.3,
+      "unit": "x accuracy",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Slow drift: Ornstein-Uhlenbeck with 2-sigma = this fraction of the accuracy, hard-clipped at it. Assumed split; real long-term stability is a datasheet/calibration-interval number."
+    },
+    {
+      "name": "sensor_noise_sigma_frac",
+      "value": 0.1,
+      "unit": "x accuracy",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Random per-sample noise sigma as a fraction of the accuracy (2-sigma = 0.2 x accuracy). Chosen so bias + drift + 2-sigma noise = 0.5 + 0.3 + 0.2 = 1.0 x accuracy, i.e. total error stays inside the stated spec."
+    },
+    {
+      "name": "sensor_h2_zero_bias_frac",
+      "value": 0.1,
+      "unit": "x accuracy",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Hydrogen channel only: the detector reads ~0 in healthy service and is assumed zero-referenced (clean-air zero check at commissioning), so most of the +/-2% FS is span error that is near zero at zero reading. Zero-offset bias bound = 0.1 x 2 %vol = 0.2 %vol. With the generic 0.5 the bound is 1.0 %vol and ~22% of simulated units would sit in a persistent 25%-LFL alarm."
+    },
+    {
+      "name": "sensor_h2_zero_drift_frac",
+      "value": 0.1,
+      "unit": "x accuracy",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Hydrogen channel only: zero drift bound 0.1 x accuracy (0.2 %vol); the generic 0.3 (0.6 %vol) alone would exceed a 10%-LFL alarm."
+    },
+    {
+      "name": "sensor_drift_tau_days",
+      "value": 3.0,
+      "unit": "d",
+      "level": "placeholder",
+      "question": "Q12",
+      "basis": "Drift correlation time. Arbitrary: slow against a 14-day episode, fast enough to wander within it."
+    },
+    {
+      "name": "h2_lfl_vol_pct",
+      "value": 4.0,
+      "unit": "%vol",
+      "level": "literature",
+      "question": "Q11",
+      "basis": "100 %LFL = 4 %vol hydrogen in air (workbook Sec. 3 flammability range 4-75 %vol)."
+    },
+    {
+      "name": "h2_detector_accuracy_lfl",
+      "value": 5.0,
+      "unit": "%LFL",
+      "level": "placeholder",
+      "question": "Q11",
+      "basis": "Realistic point/open-path %LFL hydrogen detector, +/-5 %LFL over 0-100 %LFL. Reference-configuration value, UNVERIFIED; replaces the Sec. 9 0-100 %vol +/-2% FS spec in the default mode."
+    },
+    {
+      "name": "h2_detector_t90_s",
+      "value": 12.5,
+      "unit": "s",
+      "level": "placeholder",
+      "question": "Q11",
+      "basis": "Detector response, T90 of 10-15 s (reference configuration, UNVERIFIED). Modelled as a first-order lag with tau = T90/2.3."
+    },
+    {
+      "name": "vacuum_gauge_rel_accuracy",
+      "value": 0.2,
+      "unit": "x reading",
+      "level": "placeholder",
+      "question": "Q6",
+      "basis": "Log-scale Pirani/thermocouple-class gauge: +/-20% of reading in the mid range. UNVERIFIED; no gauge datasheet."
+    },
+    {
+      "name": "vacuum_gauge_floor_pa",
+      "value": 0.05,
+      "unit": "Pa",
+      "level": "placeholder",
+      "question": "Q6",
+      "basis": "Absolute accuracy floor added to the relative term. UNVERIFIED."
+    },
+    {
+      "name": "vacuum_gauge_min_pa",
+      "value": 0.1,
+      "unit": "Pa",
+      "level": "placeholder",
+      "question": "Q6",
+      "basis": "Lower end of the gauge range (below it the reading saturates). UNVERIFIED."
+    },
+    {
+      "name": "vacuum_gauge_max_pa",
+      "value": 100000.0,
+      "unit": "Pa",
+      "level": "placeholder",
+      "question": "Q6",
+      "basis": "Upper end of the gauge range. UNVERIFIED."
+    },
+    {
+      "name": "level_dp_reference_pressure_bar_a",
+      "value": 1.2,
+      "unit": "bar(a)",
+      "level": "placeholder",
+      "question": "Q5",
+      "basis": "The differential-pressure level gauge is scaled at the saturated-liquid and vapor densities of this pressure (workbook Sec. 5 normal pressure); density change with pressure then biases the reading."
+    },
+    {
+      "name": "historian_exception_forced_s",
+      "value": 600.0,
+      "unit": "s",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Exception filter forced point (reference configuration, STD)."
+    },
+    {
+      "name": "historian_compression_forced_s",
+      "value": 28800.0,
+      "unit": "s",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Swinging-door forced archive point, 8 h (reference configuration, STD)."
+    },
+    {
+      "name": "historian_compdev_mult",
+      "value": 2.0,
+      "unit": "x exception deadband",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Compression deviation = 2 x exception deviation, a common PI-style rule of thumb. Assumption."
+    },
+    {
+      "name": "historian_fault_dropout_per_day",
+      "value": 0.2,
+      "unit": "events/day/tag",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Injected dropout rate (Bad, no value); mean 300 s. Low-rate assumption."
+    },
+    {
+      "name": "historian_fault_stale_per_day",
+      "value": 0.1,
+      "unit": "events/day/tag",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Injected stale-value rate (last value repeated, Uncertain); mean 900 s. Assumption."
+    },
+    {
+      "name": "historian_fault_flatline_per_day",
+      "value": 0.05,
+      "unit": "events/day/tag",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Injected flat-line rate (sensor output stuck, quality still Good); mean 7200 s. Assumption."
+    },
+    {
+      "name": "historian_fault_outofrange_per_day",
+      "value": 0.05,
+      "unit": "events/day/tag",
+      "level": "placeholder",
+      "question": "Q10",
+      "basis": "Injected out-of-range rate (Uncertain); mean 120 s. Assumption."
+    },
+    {
+      "name": "overfill_fill_fraction",
+      "value": 0.93,
+      "unit": "fraction",
+      "level": "placeholder",
+      "question": "Q9b",
+      "basis": "Fill used for the labeled overfill scenarios: above the 90% spec maximum (Sec. 2/8). Arbitrary value."
+    },
+    {
+      "name": "vacuum_lost_jacket_pa",
+      "value": 101325.0,
+      "unit": "Pa",
+      "level": "placeholder",
+      "question": "Q8",
+      "basis": "Jacket at atmospheric pressure for the 'lost' rung."
+    }
+  ],
+  "sensor_error_model": "split",
+  "sensor_view": {
+    "enabled": true,
+    "periods_s": {
+      "pressure_bar_a": 1.0,
+      "liquid_temp_c": 1.0,
+      "inner_wall_temp_c": 1.0,
+      "outer_wall_temp_c": 5.0,
+      "h2_concentration_pct": 0.2,
+      "liquid_level_pct": 1.0,
+      "mass_flow_fill_kg_s": 0.1,
+      "mass_flow_discharge_kg_s": 0.1,
+      "strain_ue": 0.1,
+      "vacuum_pressure_pa": 10.0,
+      "ambient_temp_c": 10.0
+    },
+    "grid_s": 1.0,
+    "h2_mode": "lfl",
+    "vacuum_mode": "log_gauge",
+    "level_mode": "dp",
+    "valve_states": false,
+    "aggregation": "channels faster than the 1 s grid are averaged over 1/period native samples; slower channels hold the last reading",
+    "level": "reference configuration; non-Sec.9 modes are UNVERIFIED placeholders"
+  },
+  "measurement_units": {
+    "pressure_bar_a": "bar(a)",
+    "liquid_temp_c": "C",
+    "inner_wall_temp_c": "C",
+    "outer_wall_temp_c": "C",
+    "h2_concentration_pct": "%LFL",
+    "liquid_level_pct": "%",
+    "mass_flow_fill_kg_s": "kg/s",
+    "mass_flow_discharge_kg_s": "kg/s",
+    "strain_ue": "ue",
+    "vacuum_pressure_pa": "Pa",
+    "ambient_temp_c": "C"
+  },
+  "boiloff_mode": "target",
+  "boiloff_normal_pct_per_day": 0.1,
+  "fill_rule": "spec: 85% nominal, 90% maximum; above the maximum = overfill (allow_overfill, labeled)",
+  "sensor_error_split": {
+    "bias_frac": 0.5,
+    "drift_frac": 0.3,
+    "noise_sigma_frac": 0.1,
+    "drift_tau_days": 3.0,
+    "per_channel": {},
+    "level": "placeholder (Q12)"
+  },
+  "sensor_unit_bias": {
+    "pressure_bar_a": 0.0,
+    "liquid_temp_c": 0.0,
+    "inner_wall_temp_c": 0.0,
+    "outer_wall_temp_c": 0.0,
+    "h2_concentration_pct": 0.0,
+    "liquid_level_pct": 0.0,
+    "mass_flow_fill_kg_s": 0.0,
+    "mass_flow_discharge_kg_s": 0.0,
+    "strain_ue": 0.0,
+    "vacuum_pressure_pa": 0.0,
+    "ambient_temp_c": 0.0
+  }
+}

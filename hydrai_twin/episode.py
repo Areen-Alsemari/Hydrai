@@ -50,7 +50,7 @@ dataset, not a thermal design tool):
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -61,6 +61,7 @@ from hydrai_twin import materials
 from hydrai_twin import sensors
 from hydrai_twin.boiloff import boiloff_rate_kg_s, boiloff_rate_pct_per_day
 from hydrai_twin.eos import H2EOS
+from hydrai_twin.module_profile import ModuleProfile
 from hydrai_twin.physics import inner_wall_offset_c, ou_step, strain_ue
 from hydrai_twin.schema import build_record
 
@@ -75,6 +76,7 @@ class NormalEpisodeConfig:
     discharge_target_fill_pct: float = 40.0
     seed: int | None = None
     start_time: datetime | None = None
+    profile: ModuleProfile = field(default_factory=ModuleProfile)  # as-built variation; default = identical modules
 
 
 class NormalEpisodeGenerator:
@@ -82,33 +84,37 @@ class NormalEpisodeGenerator:
         self.cfg = config or NormalEpisodeConfig()
         self.eos = H2EOS()
         self.rng = np.random.default_rng(self.cfg.seed)
-        self.episode_id = f"EP-{uuid.uuid4().hex[:10]}"
+        self.profile = self.cfg.profile
+        self.episode_id = f"EP-{self.cfg.seed:016x}" if self.cfg.seed is not None else f"EP-{uuid.uuid4().hex[:10]}"
         self.t0 = self.cfg.start_time or datetime.now(timezone.utc)
 
         # Pressure process tuning (Sec. 5 band/setpoint; theta/sigma are sim
         # tuning, not workbook values -- chosen so the process explores the
         # full 1.0-1.5 bar(a) band over a period of minutes, not seconds).
-        self._p_bar = C.PCV_SETPOINT_BAR
+        self._p_setpoint = C.PCV_SETPOINT_BAR + self.profile.pcv_setpoint_offset_bar
+        self._p_bar = self._p_setpoint
         self._p_theta = 1.0 / 180.0   # ~3 min mean-reversion time constant
-        self._p_sigma = 0.015         # bar / sqrt(s)
+        self._p_sigma = 0.015 * self.profile.pressure_noise_mult  # bar / sqrt(s)
 
         # Outer wall / ambient OU processes, independent of inner state.
         self._outer_wall_c = 10.0
         self._outer_wall_theta = 1.0 / 600.0
         self._outer_wall_sigma = 0.05
 
-        self._ambient_c = float(self.rng.uniform(10.0, 30.0))  # per-episode "weather"
+        self._ambient_c = float(np.clip(
+            self.rng.uniform(10.0, 30.0) + self.profile.ambient_offset_c, *C.TEMP_AMBIENT_NORMAL_C
+        ))  # per-episode "weather" + this module's site offset
         self._ambient_theta = 1.0 / 1800.0
         self._ambient_sigma = 0.02
 
         # Vacuum jacket: healthy, near-static placeholder (Sec. 10 vacuum-
         # degradation scenario, which would drive this up, is future work).
-        self._vacuum_pa = 0.5
+        self._vacuum_pa = self.profile.vacuum_baseline_pa
 
     # -- physics helpers ----------------------------------------------------
 
     def _step_pressure(self) -> float:
-        p = ou_step(self._p_bar, C.PCV_SETPOINT_BAR, self._p_theta, self._p_sigma, self.cfg.dt_s, self.rng)
+        p = ou_step(self._p_bar, self._p_setpoint, self._p_theta, self._p_sigma, self.cfg.dt_s, self.rng)
         self._p_bar = float(np.clip(p, *C.PCV_BAND_BAR))
         return self._p_bar
 
@@ -129,7 +135,7 @@ class NormalEpisodeGenerator:
         return float(np.clip(t_sat_c + offset, *C.TEMP_INNER_WALL_NORMAL_C))
 
     def _strain_ue(self, inner_wall_k: float, p_bar_a: float) -> tuple[float, float, float]:
-        return strain_ue(inner_wall_k, p_bar_a)
+        return strain_ue(inner_wall_k, p_bar_a, thickness_m=self.profile.wall_thickness_m)
 
     # -- record assembly ------------------------------------------------
 
@@ -171,14 +177,17 @@ class NormalEpisodeGenerator:
             "vacuum_pressure_pa": self._vacuum_pa,
             "ambient_temp_c": ambient_c,
         }
-        measurements = {name: sensors.measure(name, val, self.rng) for name, val in true_values.items()}
+        measurements = {
+            name: sensors.measure(name, val, self.rng, bias=self.profile.sensor_bias.get(name, 0.0))
+            for name, val in true_values.items()
+        }
 
         timestamp = self.t0 + timedelta(seconds=step_idx * self.cfg.dt_s)
 
         system_context = {
             "module_id": self.cfg.module_id,
             "n_modules": C.N_MODULES,
-            "tank_volume_m3": C.TANK_INTERNAL_VOLUME_M3,
+            "tank_volume_m3": self.profile.tank_volume_m3,
             "scenario": "normal",
             "phase": phase,
             "boiloff_mode": self.cfg.boiloff_mode,
@@ -194,7 +203,7 @@ class NormalEpisodeGenerator:
             "vapor_density_kg_m3": sat.vapor_density_kg_m3,
             "latent_heat_kj_kg": sat.latent_heat_j_kg / 1e3,
             "boiloff_rate_kg_s": mdot_bog,
-            "boiloff_rate_pct_day": boiloff_rate_pct_per_day(self.cfg.boiloff_mode, "normal"),
+            "boiloff_rate_pct_day": boiloff_rate_pct_per_day(self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult,
             "material_inner_wall": {
                 "t_k": inner_wall_k,
                 "k_w_mk": k_val,
@@ -230,19 +239,19 @@ class NormalEpisodeGenerator:
 
         p0 = self._p_bar
         rho0 = self.eos.liquid_density(p0)
-        mass_kg = C.TANK_INTERNAL_VOLUME_M3 * (C.INITIAL_FILL_PCT / 100.0) * rho0
+        mass_kg = self.profile.tank_volume_m3 * (C.INITIAL_FILL_PCT / 100.0) * rho0
 
         def fill_pct_of(mass: float) -> float:
             rho = self.eos.liquid_density(self._p_bar)
-            return 100.0 * mass / (C.TANK_INTERNAL_VOLUME_M3 * rho)
+            return 100.0 * mass / (self.profile.tank_volume_m3 * rho)
 
         # --- Phase 1: filling (Sec. 8: 10% -> 85% target fill) ---
-        fill_flow = C.FILL_FLOW_NORMAL_KG_S
+        fill_flow = float(np.clip(C.FILL_FLOW_NORMAL_KG_S * self.profile.fill_flow_mult, *C.FILL_FLOW_RANGE_KG_S))
         fill_pct = fill_pct_of(mass_kg)
         while fill_pct < C.TARGET_FILL_PCT:
             self._step_pressure()
             mdot_in = float(np.clip(self.rng.normal(fill_flow, 0.03), *C.FILL_FLOW_RANGE_KG_S))
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal")
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult
             mass_kg += (mdot_in - mdot_bog) * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "filling", mass_kg, fill_pct, mdot_in, 0.0, mdot_bog))
@@ -252,18 +261,18 @@ class NormalEpisodeGenerator:
         idle_ticks = int(self.cfg.idle_duration_s / dt)
         for _ in range(idle_ticks):
             self._step_pressure()
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal")
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult
             mass_kg -= mdot_bog * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "idle", mass_kg, fill_pct, 0.0, 0.0, mdot_bog))
             step_idx += 1
 
         # --- Phase 3: discharge (Sec. 8 demand table) ---
-        discharge_flow = C.DISCHARGE_DEMAND_KG_S[self.cfg.discharge_demand]
+        discharge_flow = C.DISCHARGE_DEMAND_KG_S[self.cfg.discharge_demand] * self.profile.discharge_flow_mult
         while fill_pct > self.cfg.discharge_target_fill_pct:
             self._step_pressure()
             mdot_out = float(max(0.0, self.rng.normal(discharge_flow, 0.02)))
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal")
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult
             mass_kg -= (mdot_out + mdot_bog) * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "discharge", mass_kg, fill_pct, 0.0, mdot_out, mdot_bog))

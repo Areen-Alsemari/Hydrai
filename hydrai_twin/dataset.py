@@ -42,6 +42,8 @@ from typing import Any
 from hydrai_twin import constants as C
 from hydrai_twin.episode import NormalEpisodeConfig, NormalEpisodeGenerator
 from hydrai_twin.fault_episode import FaultEpisodeConfig, FaultEpisodeGenerator
+from hydrai_twin.module_profile import ModuleProfile, make_profile
+from hydrai_twin.seeding import stable_seed
 
 FAULT_SCENARIOS = (1, 2, 3, 4, 5, 6, -1)  # Sec.10 labels, excluding 0 (handled by the normal generator)
 
@@ -152,7 +154,11 @@ class DatasetConfig:
     idle_duration_s_fault: float = 900.0
     dt_s: float = 1.0
     base_seed: int = 20260101
-    start_time: datetime | None = None
+    start_time: datetime = datetime(2026, 1, 1, tzinfo=timezone.utc)  # fixed, so output is byte-reproducible
+    variation_scale: float = 1.0       # per-module as-built variation (module_profile.py);
+                                        # 0.0 reproduces the identical-modules twin
+    profile_seed: int | None = None    # seed for module profiles; None -> base_seed. Kept separate so the
+                                        # target-tier pass (different episode seeds) reuses the SAME physical modules
     episode_spacing_s: float = 3600.0  # stagger each episode's timestamps so a
                                         # dataset built from many episodes doesn't
                                         # have every one starting at the same clock time
@@ -170,20 +176,29 @@ class EpisodeManifestEntry:
     seed: int
 
 
-def _seed_for(base_seed: int, module_idx: int, scenario_key: str) -> int:
-    # stable, collision-free derivation: not workbook-related, just bookkeeping
-    return base_seed + module_idx * 100_000 + abs(hash(scenario_key)) % 99_991
+def _seed_for(base_seed: int, module_id: str, scenario_key: str) -> int:
+    # blake2b-based, so identical across processes. (The previous version used
+    # Python's built-in hash() on a string, which is randomized per process --
+    # the dataset was NOT actually reproducible across runs.)
+    return stable_seed(base_seed, module_id, scenario_key)
+
+
+def module_profiles(cfg: "DatasetConfig") -> dict[str, ModuleProfile]:
+    seed = cfg.profile_seed if cfg.profile_seed is not None else cfg.base_seed
+    return {m: make_profile(m, seed, cfg.variation_scale) for m in cfg.modules}
 
 
 def generate_dataset(cfg: DatasetConfig) -> tuple[list[dict[str, Any]], list[EpisodeManifestEntry]]:
     all_records: list[dict[str, Any]] = []
     manifest: list[EpisodeManifestEntry] = []
-    t_cursor = cfg.start_time or datetime.now(timezone.utc)
+    t_cursor = cfg.start_time
+    profiles = module_profiles(cfg)
 
-    for module_idx, module_id in enumerate(cfg.modules):
+    for module_id in cfg.modules:
+        profile = profiles[module_id]
         for boiloff_mode in cfg.boiloff_modes:
             if cfg.include_normal:
-                seed = _seed_for(cfg.base_seed, module_idx, f"normal-{boiloff_mode}")
+                seed = _seed_for(cfg.base_seed, module_id, f"normal-{boiloff_mode}")
                 ep_cfg = NormalEpisodeConfig(
                     module_id=module_id,
                     boiloff_mode=boiloff_mode,
@@ -191,6 +206,7 @@ def generate_dataset(cfg: DatasetConfig) -> tuple[list[dict[str, Any]], list[Epi
                     idle_duration_s=cfg.idle_duration_s_normal,
                     seed=seed,
                     start_time=t_cursor,
+                    profile=profile,
                 )
                 records = NormalEpisodeGenerator(ep_cfg).generate()
                 all_records.extend(records)
@@ -204,7 +220,7 @@ def generate_dataset(cfg: DatasetConfig) -> tuple[list[dict[str, Any]], list[Epi
             for fault_id in cfg.fault_ids:
                 for variant in _fault_variants(fault_id):
                     variant_tag = variant["variant_tag"]
-                    seed = _seed_for(cfg.base_seed, module_idx, f"fault-{fault_id}-{variant_tag}-{boiloff_mode}")
+                    seed = _seed_for(cfg.base_seed, module_id, f"fault-{fault_id}-{variant_tag}-{boiloff_mode}")
                     f_cfg = FaultEpisodeConfig(
                         fault_id=fault_id,
                         module_id=module_id,
@@ -213,6 +229,7 @@ def generate_dataset(cfg: DatasetConfig) -> tuple[list[dict[str, Any]], list[Epi
                         idle_duration_s=cfg.idle_duration_s_fault,
                         seed=seed,
                         start_time=t_cursor,
+                        profile=profile,
                         **variant,
                     )
                     records = FaultEpisodeGenerator(f_cfg).generate()
@@ -226,6 +243,35 @@ def generate_dataset(cfg: DatasetConfig) -> tuple[list[dict[str, Any]], list[Epi
                     t_cursor += timedelta(seconds=len(records) * cfg.dt_s + cfg.episode_spacing_s)
 
     return all_records, manifest
+
+
+def generate_commissioning(cfg: DatasetConfig) -> list[dict[str, Any]]:
+    """One known-healthy commissioning run per module, kept OUT of
+    dataset/train/test. It plays the role of the baseline run a real unit
+    gets when it is first commissioned: a deployed monitor can calibrate to
+    the unit's own healthy behavior from it (see ml/relative.py), but must
+    never calibrate from the unit's later evaluation data. Same generator and
+    module profile as that module's other episodes, different seed."""
+    records: list[dict[str, Any]] = []
+    profiles = module_profiles(cfg)
+    t = cfg.start_time - timedelta(days=1)  # strictly before the module's operating data
+    for module_id in cfg.modules:
+        seed = _seed_for(cfg.base_seed, module_id, "commissioning")
+        ep = NormalEpisodeGenerator(NormalEpisodeConfig(
+            module_id=module_id, boiloff_mode=cfg.boiloff_modes[0], dt_s=cfg.dt_s,
+            idle_duration_s=cfg.idle_duration_s_normal, seed=seed, start_time=t,
+            profile=profiles[module_id],
+        )).generate()
+        for r in ep:
+            r["system_context"]["variant_tag"] = "commissioning"
+        records.extend(ep)
+        t += timedelta(seconds=len(ep) * cfg.dt_s + cfg.episode_spacing_s)
+    return records
+
+
+def write_commissioning(cfg: DatasetConfig, out_dir: Path) -> None:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    _write_jsonl(generate_commissioning(cfg), out_dir / "commissioning.jsonl")
 
 
 def _label_counts(records: list[dict[str, Any]]) -> dict[str, int]:
@@ -295,14 +341,17 @@ def write_dataset(
     cfg: DatasetConfig,
     out_dir: Path,
     held_out_modules: tuple[str, ...] = DEFAULT_HELD_OUT_MODULES,
+    write_split: bool = True,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     records, manifest = generate_dataset(cfg)
     train, test = split_train_test(records, held_out_modules)
 
     _write_jsonl(records, out_dir / "dataset.jsonl")
-    _write_jsonl(train, out_dir / "train.jsonl")
-    _write_jsonl(test, out_dir / "test.jsonl")
+    if write_split:
+        _write_jsonl(train, out_dir / "train.jsonl")
+        _write_jsonl(test, out_dir / "test.jsonl")
+    write_commissioning(cfg, out_dir)
 
     manifest_path = out_dir / "manifest.json"
     manifest_path.write_text(json.dumps(
@@ -313,7 +362,9 @@ def write_dataset(
                 "fault_ids": cfg.fault_ids,
                 "base_seed": cfg.base_seed,
                 "dt_s": cfg.dt_s,
+                "variation_scale": cfg.variation_scale,
             },
+            "module_profiles": {m: p.as_dict() for m, p in module_profiles(cfg).items()},
             "split": {
                 "held_out_modules": held_out_modules,
                 "note": "severity/size is NOT excluded from training -- train sees the full "
@@ -372,6 +423,9 @@ def write_target_tier_dataset(cfg: DatasetConfig, out_dir: Path) -> None:
         dt_s=cfg.dt_s,
         base_seed=cfg.base_seed + 1,  # distinct seed stream from the baseline-tier dataset
         episode_spacing_s=cfg.episode_spacing_s,
+        start_time=cfg.start_time,
+        variation_scale=cfg.variation_scale,
+        profile_seed=cfg.profile_seed if cfg.profile_seed is not None else cfg.base_seed,
     )
     records, manifest = generate_dataset(target_cfg)
     _write_jsonl(records, out_dir / "dataset_target_tier.jsonl")

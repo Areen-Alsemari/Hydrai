@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "name": "HYDRAI CGH2 reference dashboard configuration",
+    "status": "REFERENCE - not a verified Saudi system",
+    "system": "cgh2",
+    "dcs_context": "PI-style historian, read-only side channel (NAMUR NOA style); tag table reconstructed from the build instruction and Addendum 1 because the decision register (Sec. 5) was not available",
+    "generator_grid_s": 1,
+    "source_tags": "V1 primary document/datasheet, V2 reputable secondary, V3 existence only, U not found, CALC our calculation, JUDGE decision without a source, REG-UNREAD relayed from the register"
+  },
+  "historian_defaults": {
+    "raw_sample_s": 1,
+    "exception_deadband_pct_span": [0.1, 0.5],
+    "exception_forced_point_s": 600,
+    "compression": "swinging_door",
+    "compression_forced_point_s": 28800,
+    "opc_quality": ["Good", "Uncertain", "Bad"],
+    "injected_faults": ["stale_value", "flat_line", "out_of_range", "dropout"],
+    "source": "STD"
+  },
+  "tags": [
+    {"tag": "GH2-PT-101", "channel": "pressure_bar_a", "decision": "KEEP (range per class)", "unit": "bar_a", "range": "class transmitter range (low 100, medium 400, high 500 bar)",
+     "sample_period_s": 1, "accuracy": "0.25% FS", "source": "V1",
+     "alarms": {"PAH": "1.02 x MOP", "PAHH": "1.05 x MOP"}},
+    {"tag": "GH2-TT-101", "channel": "gas_temp_c", "decision": "MODIFY (was liquid temperature)", "unit": "C", "range": [-40, 150], "sample_period_s": 1,
+     "accuracy": "+-0.5 C plus ~1 K bulk gradient (5-10 K after a fill, decaying)", "source": "V2",
+     "alarms": {"TAH": 85, "TAHH": 100, "note": "JUDGE; 85 C is the older SAE J2601 vehicle-tank limit used as an analog"}},
+    {"tag": "GH2-TT-102", "channel": "outer_wall_temp_c", "decision": "KEEP", "unit": "C", "range": [-50, 100], "sample_period_s": 5, "accuracy": "+-0.5 C", "source": "REG-UNREAD"},
+    {"tag": "GH2-AT-101", "channel": "h2_ambient_detector", "decision": "MODIFY (INL alarm/trip)", "unit": "%LFL", "range": [0, 100], "sample_period_s": 0.2, "response_s": [10, 15],
+     "accuracy_default": "+-5 %LFL (conservative; repeatability per datasheet)", "accuracy_spec_mode": "2 %vol (spec)", "source": "V1",
+     "alarms": {"H": 25, "HH": 50, "note": "INL (V1); ISO 26142 requires an alarm at <=1 %vol = 25 %LFL (V2); documented alternative 20/40 (DOE)"}},
+    {"tag": "GH2-FT-101", "channel": "fill_flow", "decision": "MODIFY (compressor feed into the module)", "unit": "kg/s", "range": "0-0.8 kg/min", "sample_period_s": 0.1,
+     "accuracy_default": "0.5% of reading + 0.009 kg/min zero stability (datasheet mode)", "accuracy_spec_mode": "1% FS", "delay_s": [2, 9], "source": "V1"},
+    {"tag": "GH2-FT-102", "channel": "discharge_flow", "decision": "MODIFY (dispenser draw)", "unit": "kg/s", "range": "0-4 kg/min", "sample_period_s": 0.1,
+     "accuracy_default": "0.5% of reading + 0.009 kg/min zero stability (datasheet mode)", "accuracy_spec_mode": "1% FS", "delay_s": [2, 9], "source": "V1"},
+    {"tag": "GH2-SE-101", "channel": "strain", "decision": "KEEP", "unit": "microstrain", "range": [-5000, 5000], "sample_period_s": 0.1, "accuracy": "1% FS", "source": "REG-UNREAD"},
+    {"tag": "GH2-TT-901", "channel": "ambient_temp", "decision": "KEEP", "unit": "C", "range": [-20, 60], "sample_period_s": 10, "accuracy": "+-0.3 C", "source": "REG-UNREAD"},
+    {"tag": "GH2-XS-101..", "channel": "valve_states", "decision": "NEW", "type": "discrete_input", "values": ["run/stop", "open/closed"],
+     "members": ["compressor_status", "inlet_valve", "discharge_valve", "prv_state"],
+     "note": "register: default ON for CGH2; run the ablation OFF", "source": "JUDGE"}
+  ],
+  "dropped_from_lh2": ["liquid level (DP)", "vacuum jacket pressure", "liquid temperature", "inner-wall (liquid-side) temperature"],
+  "derived": ["real-gas inventory (kg) from P and T (CoolProp hydrogen)"],
+  "alarm_load": {
+    "operator_norm": "EEMUA 191 / ISA-18.2: about 6 per hour average is manageable; 12 per hour is the busy ceiling",
+    "agent_target": "no more than about 1 agent alert per hour of healthy operation",
+    "source": "STD"
+  }
+}

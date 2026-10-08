@@ -50,6 +50,7 @@ from hydrai_twin import materials
 from hydrai_twin import sensors
 from hydrai_twin.boiloff import SECONDS_PER_DAY, boiloff_rate_kg_s, boiloff_rate_pct_per_day
 from hydrai_twin.eos import H2EOS
+from hydrai_twin.module_profile import ModuleProfile
 from hydrai_twin.physics import inner_wall_offset_c, ou_step, strain_ue
 from hydrai_twin.schema import build_record
 
@@ -259,6 +260,7 @@ class FaultEpisodeConfig:
 
     seed: int | None = None
     start_time: datetime | None = None
+    profile: ModuleProfile = field(default_factory=ModuleProfile)  # as-built variation; default = identical modules
 
 
 class FaultEpisodeGenerator:
@@ -267,7 +269,8 @@ class FaultEpisodeGenerator:
         self.eos = H2EOS()
         self.rng = np.random.default_rng(self.cfg.seed)
         self._py_rng = random.Random(self.cfg.seed)
-        self.episode_id = f"EP-{uuid.uuid4().hex[:10]}"
+        self.profile = self.cfg.profile
+        self.episode_id = f"EP-{self.cfg.seed:016x}" if self.cfg.seed is not None else f"EP-{uuid.uuid4().hex[:10]}"
         self.t0 = self.cfg.start_time or datetime.now(timezone.utc)
 
         if self.cfg.fault_id == -1:
@@ -279,15 +282,18 @@ class FaultEpisodeGenerator:
             self._sub_fault_ids = ()
             self._sub_fault_weights = {}
 
-        self._p_bar = C.PCV_SETPOINT_BAR
+        self._p_setpoint_offset = self.profile.pcv_setpoint_offset_bar
+        self._p_bar = C.PCV_SETPOINT_BAR + self._p_setpoint_offset
         self._p_theta = 1.0 / 180.0
-        self._p_sigma_base = 0.015
+        self._p_sigma_base = 0.015 * self.profile.pressure_noise_mult
 
         self._outer_wall_c = 10.0
         self._outer_wall_theta = 1.0 / 600.0
         self._outer_wall_sigma = 0.05
 
-        self._ambient_c = float(self.rng.uniform(10.0, 30.0))
+        self._ambient_c = float(np.clip(
+            self.rng.uniform(10.0, 30.0) + self.profile.ambient_offset_c, *C.TEMP_AMBIENT_NORMAL_C
+        ))
         self._ambient_theta = 1.0 / 1800.0
         self._ambient_sigma = 0.02
 
@@ -330,7 +336,7 @@ class FaultEpisodeGenerator:
 
     def _step_pressure(self, eff: SingleFaultEffects) -> float:
         sigma = self._p_sigma_base * eff.p_sigma_mult
-        p = ou_step(self._p_bar, eff.p_setpoint_bar, self._p_theta, sigma, self.cfg.dt_s, self.rng)
+        p = ou_step(self._p_bar, eff.p_setpoint_bar + self._p_setpoint_offset, self._p_theta, sigma, self.cfg.dt_s, self.rng)
         lo = C.PCV_BAND_BAR[0]
         hi = eff.p_band_hi_bar
         self._p_bar = float(np.clip(p, min(lo, hi), max(lo, hi)))
@@ -385,7 +391,8 @@ class FaultEpisodeGenerator:
         dll_val = materials.thermal_expansion_dl_l(inner_wall_k)
         e_val = materials.youngs_modulus_gpa(inner_wall_k)
         strain_thermal_ue, strain_pressure_ue, strain_total_ue = strain_ue(
-            inner_wall_k, p_bar, stress_concentration_factor=eff.strain_scf
+            inner_wall_k, p_bar, thickness_m=self.profile.wall_thickness_m,
+            stress_concentration_factor=eff.strain_scf,
         )
 
         h2_conc_pct_true = max(0.0, eff.h2_true_pct + abs(self.rng.normal(0.0, 0.02)))
@@ -400,10 +407,13 @@ class FaultEpisodeGenerator:
             "mass_flow_fill_kg_s": mdot_in,
             "mass_flow_discharge_kg_s": mdot_out,
             "strain_ue": strain_total_ue,
-            "vacuum_pressure_pa": eff.vacuum_pa,
+            "vacuum_pressure_pa": self.profile.vacuum_baseline_pa + (eff.vacuum_pa - 0.5),  # eff.vacuum_pa is relative to the nominal 0.5 Pa healthy value
             "ambient_temp_c": ambient_c,
         }
-        measurements = {name: sensors.measure(name, val, self.rng) for name, val in true_values.items()}
+        measurements = {
+            name: sensors.measure(name, val, self.rng, bias=self.profile.sensor_bias.get(name, 0.0))
+            for name, val in true_values.items()
+        }
 
         label = self._current_label(step_idx)
         if self.cfg.fault_id == 1 and label == 1:
@@ -423,7 +433,7 @@ class FaultEpisodeGenerator:
         system_context = {
             "module_id": self.cfg.module_id,
             "n_modules": C.N_MODULES,
-            "tank_volume_m3": C.TANK_INTERNAL_VOLUME_M3,
+            "tank_volume_m3": self.profile.tank_volume_m3,
             "scenario": C.FAULT_LABELS[self.cfg.fault_id if self.cfg.fault_id in C.FAULT_LABELS else -1],
             "phase": phase,
             "boiloff_mode": self.cfg.boiloff_mode,
@@ -441,7 +451,7 @@ class FaultEpisodeGenerator:
             "vapor_density_kg_m3": sat.vapor_density_kg_m3,
             "latent_heat_kj_kg": sat.latent_heat_j_kg / 1e3,
             "boiloff_rate_kg_s": mdot_bog,
-            "boiloff_rate_pct_day": boiloff_rate_pct_per_day(self.cfg.boiloff_mode, "normal") * eff.heat_leak_mult * eff.boiloff_secondary_mult,
+            "boiloff_rate_pct_day": boiloff_rate_pct_per_day(self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult * eff.heat_leak_mult * eff.boiloff_secondary_mult,
             "leak_rate_kg_s": leak_rate_kg_s,
             "apparent_boiloff_rate_pct_day": apparent_boiloff_pct_day,
             "material_inner_wall": {
@@ -478,22 +488,22 @@ class FaultEpisodeGenerator:
         dt = self.cfg.dt_s
 
         rho0 = self.eos.liquid_density(self._p_bar)
-        mass_kg = C.TANK_INTERNAL_VOLUME_M3 * (C.INITIAL_FILL_PCT / 100.0) * rho0
+        mass_kg = self.profile.tank_volume_m3 * (C.INITIAL_FILL_PCT / 100.0) * rho0
 
         def fill_pct_of(mass: float) -> float:
             rho = self.eos.liquid_density(self._p_bar)
-            return 100.0 * mass / (C.TANK_INTERNAL_VOLUME_M3 * rho)
+            return 100.0 * mass / (self.profile.tank_volume_m3 * rho)
 
         # --- Phase 1: filling (identical to normal episodes -- fault has not
         # started yet; Sec.10's taxonomy describes steady-state operating
         # signatures, not filling-transient ones, so onset is deferred to idle) ---
-        fill_flow = C.FILL_FLOW_NORMAL_KG_S
+        fill_flow = float(np.clip(C.FILL_FLOW_NORMAL_KG_S * self.profile.fill_flow_mult, *C.FILL_FLOW_RANGE_KG_S))
         fill_pct = fill_pct_of(mass_kg)
         eff0 = SingleFaultEffects()
         while fill_pct < self.cfg.fill_target_pct:
             self._step_pressure(eff0)
             mdot_in = float(np.clip(self.rng.normal(fill_flow, 0.03), *C.FILL_FLOW_RANGE_KG_S))
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal")
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult
             mass_kg += (mdot_in - mdot_bog) * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "filling", mass_kg, fill_pct, mdot_in, 0.0, mdot_bog, 0.0, eff0))
@@ -511,19 +521,19 @@ class FaultEpisodeGenerator:
                 self._p_bar = float(np.clip(self.cfg.initial_pressure_bar, *C.PCV_BAND_BAR))
             eff = self._effects(step_idx)
             self._step_pressure(eff)
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * eff.heat_leak_mult * eff.boiloff_secondary_mult
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult * eff.heat_leak_mult * eff.boiloff_secondary_mult
             mass_kg -= (mdot_bog + eff.leak_rate_kg_s) * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "idle", mass_kg, fill_pct, 0.0, 0.0, mdot_bog, eff.leak_rate_kg_s, eff))
             step_idx += 1
 
         # --- Phase 3: discharge -- fault continues at its fully-ramped state ---
-        discharge_flow = C.DISCHARGE_DEMAND_KG_S[self.cfg.discharge_demand]
+        discharge_flow = C.DISCHARGE_DEMAND_KG_S[self.cfg.discharge_demand] * self.profile.discharge_flow_mult
         while fill_pct > self.cfg.discharge_target_fill_pct and mass_kg > 0:
             eff = self._effects(step_idx)
             self._step_pressure(eff)
             mdot_out = float(max(0.0, self.rng.normal(discharge_flow, 0.02)))
-            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * eff.heat_leak_mult * eff.boiloff_secondary_mult
+            mdot_bog = boiloff_rate_kg_s(mass_kg, self.cfg.boiloff_mode, "normal") * self.profile.insulation_leak_mult * eff.heat_leak_mult * eff.boiloff_secondary_mult
             mass_kg -= (mdot_out + mdot_bog + eff.leak_rate_kg_s) * dt
             fill_pct = fill_pct_of(mass_kg)
             records.append(self._record(step_idx, "discharge", mass_kg, fill_pct, 0.0, mdot_out, mdot_bog, eff.leak_rate_kg_s, eff))
